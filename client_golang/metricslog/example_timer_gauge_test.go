@@ -11,12 +11,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package elasticsearch_test
+package metricslog_test
 
 import (
     "os"
 
-    "github.com/Schneizelw/elasticsearch/client_golang/elasticsearch"
+    "github.com/Schneizelw/metricslog/client_golang/metricslog"
 )
 
 var (
@@ -25,7 +25,7 @@ var (
     // to use a Gauge for timing the function call. For timing a batch job
     // and pushing the result to a Pushgateway, see also the comprehensive
     // example in the push package.
-    funcDuration = elasticsearch.NewGauge(elasticsearch.GaugeOpts{
+    funcDuration = metricslog.NewGauge(metricslog.GaugeOpts{
         Name: "example_function_duration_seconds",
         Help: "Duration of the last call of an example function.",
     })
@@ -33,7 +33,7 @@ var (
 
 func run() error {
     // The Set method of the Gauge is used to observe the duration.
-    timer := elasticsearch.NewTimer(elasticsearch.ObserverFunc(funcDuration.Set))
+    timer := metricslog.NewTimer(metricslog.ObserverFunc(funcDuration.Set))
     defer timer.ObserveDuration()
 
     // Do something. Return errors as encountered. The use of 'defer' above

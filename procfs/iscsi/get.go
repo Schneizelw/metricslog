@@ -23,7 +23,7 @@ import (
     "strconv"
     "strings"
 
-    "github.com/Schneizelw/elasticsearch/procfs/internal/util"
+    "github.com/Schneizelw/metricslog/procfs/internal/util"
 )
 
 // GetStats is the main iscsi status information func

@@ -11,12 +11,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package elasticsearch
+package metricslog
 
 import (
     "testing"
 
-    dto "github.com/Schneizelw/elasticsearch/client_model/go"
+    dto "github.com/Schneizelw/metricslog/client_model/go"
 )
 
 func TestTimerObserve(t *testing.T) {

@@ -23,18 +23,18 @@ import (
     "testing"
     "time"
 
-    "github.com/Schneizelw/elasticsearch/client_golang/elasticsearch"
+    "github.com/Schneizelw/metricslog/client_golang/metricslog"
 )
 
 type errorCollector struct{}
 
-func (e errorCollector) Describe(ch chan<- *elasticsearch.Desc) {
-    ch <- elasticsearch.NewDesc("invalid_metric", "not helpful", nil, nil)
+func (e errorCollector) Describe(ch chan<- *metricslog.Desc) {
+    ch <- metricslog.NewDesc("invalid_metric", "not helpful", nil, nil)
 }
 
-func (e errorCollector) Collect(ch chan<- elasticsearch.Metric) {
-    ch <- elasticsearch.NewInvalidMetric(
-        elasticsearch.NewDesc("invalid_metric", "not helpful", nil, nil),
+func (e errorCollector) Collect(ch chan<- metricslog.Metric) {
+    ch <- metricslog.NewInvalidMetric(
+        metricslog.NewDesc("invalid_metric", "not helpful", nil, nil),
         errors.New("collect error"),
     )
 }
@@ -43,11 +43,11 @@ type blockingCollector struct {
     CollectStarted, Block chan struct{}
 }
 
-func (b blockingCollector) Describe(ch chan<- *elasticsearch.Desc) {
-    ch <- elasticsearch.NewDesc("dummy_desc", "not helpful", nil, nil)
+func (b blockingCollector) Describe(ch chan<- *metricslog.Desc) {
+    ch <- metricslog.NewDesc("dummy_desc", "not helpful", nil, nil)
 }
 
-func (b blockingCollector) Collect(ch chan<- elasticsearch.Metric) {
+func (b blockingCollector) Collect(ch chan<- metricslog.Metric) {
     select {
     case b.CollectStarted <- struct{}{}:
     default:
@@ -61,19 +61,19 @@ func TestHandlerErrorHandling(t *testing.T) {
     // Create a registry that collects a MetricFamily with two elements,
     // another with one, and reports an error. Further down, we'll use the
     // same registry in the HandlerOpts.
-    reg := elasticsearch.NewRegistry()
+    reg := metricslog.NewRegistry()
 
-    cnt := elasticsearch.NewCounter(elasticsearch.CounterOpts{
+    cnt := metricslog.NewCounter(metricslog.CounterOpts{
         Name: "the_count",
         Help: "Ah-ah-ah! Thunder and lightning!",
     })
     reg.MustRegister(cnt)
 
-    cntVec := elasticsearch.NewCounterVec(
-        elasticsearch.CounterOpts{
+    cntVec := metricslog.NewCounterVec(
+        metricslog.CounterOpts{
             Name:        "name",
             Help:        "docstring",
-            ConstLabels: elasticsearch.Labels{"constname": "constvalue"},
+            ConstLabels: metricslog.Labels{"constname": "constvalue"},
         },
         []string{"labelname"},
     )
@@ -173,7 +173,7 @@ the_count 0
 }
 
 func TestInstrumentMetricHandler(t *testing.T) {
-    reg := elasticsearch.NewRegistry()
+    reg := metricslog.NewRegistry()
     handler := InstrumentMetricHandler(reg, HandlerFor(reg, HandlerOpts{}))
     // Do it again to test idempotency.
     InstrumentMetricHandler(reg, HandlerFor(reg, HandlerOpts{}))
@@ -212,7 +212,7 @@ func TestInstrumentMetricHandler(t *testing.T) {
 }
 
 func TestHandlerMaxRequestsInFlight(t *testing.T) {
-    reg := elasticsearch.NewRegistry()
+    reg := metricslog.NewRegistry()
     handler := HandlerFor(reg, HandlerOpts{MaxRequestsInFlight: 1})
     w1 := httptest.NewRecorder()
     w2 := httptest.NewRecorder()
@@ -250,7 +250,7 @@ func TestHandlerMaxRequestsInFlight(t *testing.T) {
 }
 
 func TestHandlerTimeout(t *testing.T) {
-    reg := elasticsearch.NewRegistry()
+    reg := metricslog.NewRegistry()
     handler := HandlerFor(reg, HandlerOpts{Timeout: time.Millisecond})
     w := httptest.NewRecorder()
 

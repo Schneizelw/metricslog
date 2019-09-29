@@ -13,7 +13,7 @@
 
 // +build go1.12
 
-package elasticsearch
+package metricslog
 
 import "runtime/debug"
 

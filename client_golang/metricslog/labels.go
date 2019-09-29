@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package elasticsearch
+package metricslog
 
 import (
     "errors"
@@ -19,7 +19,7 @@ import (
     "strings"
     "unicode/utf8"
 
-    "github.com/Schneizelw/elasticsearch/common/model"
+    "github.com/Schneizelw/metricslog/common/model"
 )
 
 // Labels represents a collection of label name -> value mappings. This type is

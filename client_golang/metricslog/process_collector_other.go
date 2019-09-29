@@ -13,10 +13,10 @@
 
 // +build !windows
 
-package elasticsearch
+package metricslog
 
 import (
-    "github.com/Schneizelw/elasticsearch/procfs"
+    "github.com/Schneizelw/metricslog/procfs"
 )
 
 func canCollectProcess() bool {

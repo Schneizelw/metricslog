@@ -17,7 +17,7 @@ package xfs_test
 import (
     "testing"
 
-    "github.com/Schneizelw/elasticsearch/procfs/xfs"
+    "github.com/Schneizelw/metricslog/procfs/xfs"
 )
 
 func TestReadProcStat(t *testing.T) {

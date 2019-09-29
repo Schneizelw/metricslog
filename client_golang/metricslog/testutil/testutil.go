@@ -11,15 +11,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Package testutil provides helpers to test code using the elasticsearch package
+// Package testutil provides helpers to test code using the metricslog package
 // of client_golang.
 //
 // While writing unit tests to verify correct instrumentation of your code, it's
 // a common mistake to mostly test the instrumentation library instead of your
-// own code. Rather than verifying that a elasticsearch.Counter's value has changed
+// own code. Rather than verifying that a metricslog.Counter's value has changed
 // as expected or that it shows up in the exposition after registration, it is
 // in general more robust and more faithful to the concept of unit tests to use
-// mock implementations of the elasticsearch.Counter and elasticsearch.Registerer
+// mock implementations of the metricslog.Counter and metricslog.Registerer
 // interfaces that simply assert that the Add or Register methods have been
 // called with the expected arguments. However, this might be overkill in simple
 // scenarios. The ToFloat64 function is provided for simple inspection of a
@@ -28,7 +28,7 @@
 // End-to-end tests to verify all or larger parts of the metrics exposition can
 // be implemented with the CollectAndCompare or GatherAndCompare functions. The
 // most appropriate use is not so much testing instrumentation of your code, but
-// testing custom elasticsearch.Collector implementations and in particular whole
+// testing custom metricslog.Collector implementations and in particular whole
 // exporters, i.e. programs that retrieve telemetry data from a 3rd party source
 // and convert it into Prometheus metrics.
 package testutil
@@ -38,12 +38,12 @@ import (
     "fmt"
     "io"
 
-    "github.com/Schneizelw/elasticsearch/common/expfmt"
+    "github.com/Schneizelw/metricslog/common/expfmt"
 
-    dto "github.com/Schneizelw/elasticsearch/client_model/go"
+    dto "github.com/Schneizelw/metricslog/client_model/go"
 
-    "github.com/Schneizelw/elasticsearch/client_golang/elasticsearch"
-    "github.com/Schneizelw/elasticsearch/client_golang/elasticsearch/internal"
+    "github.com/Schneizelw/metricslog/client_golang/metricslog"
+    "github.com/Schneizelw/metricslog/client_golang/metricslog/internal"
 )
 
 // ToFloat64 collects all Metrics from the provided Collector. It expects that
@@ -60,22 +60,22 @@ import (
 // only for testing purposes, and even for testing, other approaches are often
 // more appropriate (see this package's documentation).
 //
-// A clear anti-pattern would be to use a metric type from the elasticsearch
+// A clear anti-pattern would be to use a metric type from the metricslog
 // package to track values that are also needed for something else than the
 // exposition of Prometheus metrics. For example, you would like to track the
 // number of items in a queue because your code should reject queuing further
 // items if a certain limit is reached. It is tempting to track the number of
-// items in a elasticsearch.Gauge, as it is then easily available as a metric for
+// items in a metricslog.Gauge, as it is then easily available as a metric for
 // exposition, too. However, then you would need to call ToFloat64 in your
 // regular code, potentially quite often. The recommended way is to track the
 // number of items conventionally (in the way you would have done it without
 // considering Prometheus metrics) and then expose the number with a
-// elasticsearch.GaugeFunc.
-func ToFloat64(c elasticsearch.Collector) float64 {
+// metricslog.GaugeFunc.
+func ToFloat64(c metricslog.Collector) float64 {
     var (
-        m      elasticsearch.Metric
+        m      metricslog.Metric
         mCount int
-        mChan  = make(chan elasticsearch.Metric)
+        mChan  = make(chan metricslog.Metric)
         done   = make(chan struct{})
     )
 
@@ -111,8 +111,8 @@ func ToFloat64(c elasticsearch.Collector) float64 {
 // CollectAndCompare registers the provided Collector with a newly created
 // pedantic Registry. It then does the same as GatherAndCompare, gathering the
 // metrics from the pedantic Registry.
-func CollectAndCompare(c elasticsearch.Collector, expected io.Reader, metricNames ...string) error {
-    reg := elasticsearch.NewPedanticRegistry()
+func CollectAndCompare(c metricslog.Collector, expected io.Reader, metricNames ...string) error {
+    reg := metricslog.NewPedanticRegistry()
     if err := reg.Register(c); err != nil {
         return fmt.Errorf("registering collector failed: %s", err)
     }
@@ -123,7 +123,7 @@ func CollectAndCompare(c elasticsearch.Collector, expected io.Reader, metricName
 // it to an expected output read from the provided Reader in the Prometheus text
 // exposition format. If any metricNames are provided, only metrics with those
 // names are compared.
-func GatherAndCompare(g elasticsearch.Gatherer, expected io.Reader, metricNames ...string) error {
+func GatherAndCompare(g metricslog.Gatherer, expected io.Reader, metricNames ...string) error {
     got, err := g.Gather()
     if err != nil {
         return fmt.Errorf("gathering metrics failed: %s", err)

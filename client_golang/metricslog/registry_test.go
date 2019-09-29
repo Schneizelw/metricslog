@@ -17,7 +17,7 @@
 // Use of this source code is governed by a BSD-style license that can be found
 // in the LICENSE file.
 
-package elasticsearch_test
+package metricslog_test
 
 import (
     "bytes"
@@ -31,22 +31,22 @@ import (
     "testing"
     "time"
 
-    dto "github.com/Schneizelw/elasticsearch/client_model/go"
+    dto "github.com/Schneizelw/metricslog/client_model/go"
 
     "github.com/golang/protobuf/proto"
-    "github.com/Schneizelw/elasticsearch/common/expfmt"
+    "github.com/Schneizelw/metricslog/common/expfmt"
 
-    "github.com/Schneizelw/elasticsearch/client_golang/elasticsearch"
-    "github.com/Schneizelw/elasticsearch/client_golang/elasticsearch/promhttp"
+    "github.com/Schneizelw/metricslog/client_golang/metricslog"
+    "github.com/Schneizelw/metricslog/client_golang/metricslog/promhttp"
 )
 
 // uncheckedCollector wraps a Collector but its Describe method yields no Desc.
 type uncheckedCollector struct {
-    c elasticsearch.Collector
+    c metricslog.Collector
 }
 
-func (u uncheckedCollector) Describe(_ chan<- *elasticsearch.Desc) {}
-func (u uncheckedCollector) Collect(c chan<- elasticsearch.Metric) {
+func (u uncheckedCollector) Describe(_ chan<- *metricslog.Desc) {}
+func (u uncheckedCollector) Collect(c chan<- metricslog.Metric) {
     u.c.Collect(c)
 }
 
@@ -57,11 +57,11 @@ func testHandler(t testing.TB) {
     // require a major rework of this test anyway, at which time I will
     // structure it in a better way.
 
-    metricVec := elasticsearch.NewCounterVec(
-        elasticsearch.CounterOpts{
+    metricVec := metricslog.NewCounterVec(
+        metricslog.CounterOpts{
             Name:        "name",
             Help:        "docstring",
-            ConstLabels: elasticsearch.Labels{"constname": "constvalue"},
+            ConstLabels: metricslog.Labels{"constname": "constvalue"},
         },
         []string{"labelname"},
     )
@@ -258,7 +258,7 @@ metric: <
 collected metric "name" { label:<name:"constname" value:"\377" > label:<name:"labelname" value:"different_val" > counter:<value:42 > } has a label named "constname" whose value is not utf8: "\xff"
 `)
 
-    summary := elasticsearch.NewSummary(elasticsearch.SummaryOpts{
+    summary := metricslog.NewSummary(metricslog.SummaryOpts{
         Name:       "complex",
         Help:       "A metric to check collisions with _sum and _count.",
         Objectives: map[float64]float64{0.5: 0.05, 0.9: 0.01, 0.99: 0.001},
@@ -271,7 +271,7 @@ complex{quantile="0.99"} NaN
 complex_sum 0
 complex_count 0
 `)
-    histogram := elasticsearch.NewHistogram(elasticsearch.HistogramOpts{
+    histogram := metricslog.NewHistogram(metricslog.HistogramOpts{
         Name: "complex",
         Help: "A metric to check collisions with _sun, _count, and _bucket.",
     })
@@ -350,7 +350,7 @@ collected metric "broken_metric" { label:<name:"foo" value:"bar" > label:<name:"
     var scenarios = []struct {
         headers    map[string]string
         out        output
-        collector  elasticsearch.Collector
+        collector  metricslog.Collector
         externalMF []*dto.MetricFamily
     }{
         { // 0
@@ -377,7 +377,7 @@ collected metric "broken_metric" { label:<name:"foo" value:"bar" > label:<name:"
         },
         { // 2
             headers: map[string]string{
-                "Accept": "foo/bar;q=0.2, application/vnd.google.protobuf;proto=io.elasticsearch.client.MetricFamily;encoding=bla;q=0.8",
+                "Accept": "foo/bar;q=0.2, application/vnd.google.protobuf;proto=io.metricslog.client.MetricFamily;encoding=bla;q=0.8",
             },
             out: output{
                 headers: map[string]string{
@@ -388,11 +388,11 @@ collected metric "broken_metric" { label:<name:"foo" value:"bar" > label:<name:"
         },
         { // 3
             headers: map[string]string{
-                "Accept": "text/plain;q=0.2, application/vnd.google.protobuf;proto=io.elasticsearch.client.MetricFamily;encoding=delimited;q=0.8",
+                "Accept": "text/plain;q=0.2, application/vnd.google.protobuf;proto=io.metricslog.client.MetricFamily;encoding=delimited;q=0.8",
             },
             out: output{
                 headers: map[string]string{
-                    "Content-Type": `application/vnd.google.protobuf; proto=io.elasticsearch.client.MetricFamily; encoding=delimited`,
+                    "Content-Type": `application/vnd.google.protobuf; proto=io.metricslog.client.MetricFamily; encoding=delimited`,
                 },
                 body: []byte{},
             },
@@ -411,11 +411,11 @@ collected metric "broken_metric" { label:<name:"foo" value:"bar" > label:<name:"
         },
         { // 5
             headers: map[string]string{
-                "Accept": "application/vnd.google.protobuf;proto=io.elasticsearch.client.MetricFamily;encoding=delimited",
+                "Accept": "application/vnd.google.protobuf;proto=io.metricslog.client.MetricFamily;encoding=delimited",
             },
             out: output{
                 headers: map[string]string{
-                    "Content-Type": `application/vnd.google.protobuf; proto=io.elasticsearch.client.MetricFamily; encoding=delimited`,
+                    "Content-Type": `application/vnd.google.protobuf; proto=io.metricslog.client.MetricFamily; encoding=delimited`,
                 },
                 body: expectedMetricFamilyAsBytes,
             },
@@ -435,11 +435,11 @@ collected metric "broken_metric" { label:<name:"foo" value:"bar" > label:<name:"
         },
         { // 7
             headers: map[string]string{
-                "Accept": "application/vnd.google.protobuf;proto=io.elasticsearch.client.MetricFamily;encoding=delimited",
+                "Accept": "application/vnd.google.protobuf;proto=io.metricslog.client.MetricFamily;encoding=delimited",
             },
             out: output{
                 headers: map[string]string{
-                    "Content-Type": `application/vnd.google.protobuf; proto=io.elasticsearch.client.MetricFamily; encoding=delimited`,
+                    "Content-Type": `application/vnd.google.protobuf; proto=io.metricslog.client.MetricFamily; encoding=delimited`,
                 },
                 body: externalMetricFamilyAsBytes,
             },
@@ -447,11 +447,11 @@ collected metric "broken_metric" { label:<name:"foo" value:"bar" > label:<name:"
         },
         { // 8
             headers: map[string]string{
-                "Accept": "application/vnd.google.protobuf;proto=io.elasticsearch.client.MetricFamily;encoding=delimited",
+                "Accept": "application/vnd.google.protobuf;proto=io.metricslog.client.MetricFamily;encoding=delimited",
             },
             out: output{
                 headers: map[string]string{
-                    "Content-Type": `application/vnd.google.protobuf; proto=io.elasticsearch.client.MetricFamily; encoding=delimited`,
+                    "Content-Type": `application/vnd.google.protobuf; proto=io.metricslog.client.MetricFamily; encoding=delimited`,
                 },
                 body: bytes.Join(
                     [][]byte{
@@ -477,7 +477,7 @@ collected metric "broken_metric" { label:<name:"foo" value:"bar" > label:<name:"
         },
         { // 10
             headers: map[string]string{
-                "Accept": "application/vnd.google.protobuf;proto=io.elasticsearch.client.MetricFamily;encoding=bla;q=0.2, text/plain;q=0.5",
+                "Accept": "application/vnd.google.protobuf;proto=io.metricslog.client.MetricFamily;encoding=bla;q=0.2, text/plain;q=0.5",
             },
             out: output{
                 headers: map[string]string{
@@ -489,7 +489,7 @@ collected metric "broken_metric" { label:<name:"foo" value:"bar" > label:<name:"
         },
         { // 11
             headers: map[string]string{
-                "Accept": "application/vnd.google.protobuf;proto=io.elasticsearch.client.MetricFamily;encoding=bla;q=0.2, text/plain;q=0.5;version=0.0.4",
+                "Accept": "application/vnd.google.protobuf;proto=io.metricslog.client.MetricFamily;encoding=bla;q=0.2, text/plain;q=0.5;version=0.0.4",
             },
             out: output{
                 headers: map[string]string{
@@ -508,11 +508,11 @@ collected metric "broken_metric" { label:<name:"foo" value:"bar" > label:<name:"
         },
         { // 12
             headers: map[string]string{
-                "Accept": "application/vnd.google.protobuf;proto=io.elasticsearch.client.MetricFamily;encoding=delimited;q=0.2, text/plain;q=0.5;version=0.0.2",
+                "Accept": "application/vnd.google.protobuf;proto=io.metricslog.client.MetricFamily;encoding=delimited;q=0.2, text/plain;q=0.5;version=0.0.2",
             },
             out: output{
                 headers: map[string]string{
-                    "Content-Type": `application/vnd.google.protobuf; proto=io.elasticsearch.client.MetricFamily; encoding=delimited`,
+                    "Content-Type": `application/vnd.google.protobuf; proto=io.metricslog.client.MetricFamily; encoding=delimited`,
                 },
                 body: bytes.Join(
                     [][]byte{
@@ -527,11 +527,11 @@ collected metric "broken_metric" { label:<name:"foo" value:"bar" > label:<name:"
         },
         { // 13
             headers: map[string]string{
-                "Accept": "application/vnd.google.protobuf;proto=io.elasticsearch.client.MetricFamily;encoding=text;q=0.5, application/vnd.google.protobuf;proto=io.elasticsearch.client.MetricFamily;encoding=delimited;q=0.4",
+                "Accept": "application/vnd.google.protobuf;proto=io.metricslog.client.MetricFamily;encoding=text;q=0.5, application/vnd.google.protobuf;proto=io.metricslog.client.MetricFamily;encoding=delimited;q=0.4",
             },
             out: output{
                 headers: map[string]string{
-                    "Content-Type": `application/vnd.google.protobuf; proto=io.elasticsearch.client.MetricFamily; encoding=text`,
+                    "Content-Type": `application/vnd.google.protobuf; proto=io.metricslog.client.MetricFamily; encoding=text`,
                 },
                 body: bytes.Join(
                     [][]byte{
@@ -546,11 +546,11 @@ collected metric "broken_metric" { label:<name:"foo" value:"bar" > label:<name:"
         },
         { // 14
             headers: map[string]string{
-                "Accept": "application/vnd.google.protobuf;proto=io.elasticsearch.client.MetricFamily;encoding=compact-text",
+                "Accept": "application/vnd.google.protobuf;proto=io.metricslog.client.MetricFamily;encoding=compact-text",
             },
             out: output{
                 headers: map[string]string{
-                    "Content-Type": `application/vnd.google.protobuf; proto=io.elasticsearch.client.MetricFamily; encoding=compact-text`,
+                    "Content-Type": `application/vnd.google.protobuf; proto=io.metricslog.client.MetricFamily; encoding=compact-text`,
                 },
                 body: bytes.Join(
                     [][]byte{
@@ -565,11 +565,11 @@ collected metric "broken_metric" { label:<name:"foo" value:"bar" > label:<name:"
         },
         { // 15
             headers: map[string]string{
-                "Accept": "application/vnd.google.protobuf;proto=io.elasticsearch.client.MetricFamily;encoding=compact-text",
+                "Accept": "application/vnd.google.protobuf;proto=io.metricslog.client.MetricFamily;encoding=compact-text",
             },
             out: output{
                 headers: map[string]string{
-                    "Content-Type": `application/vnd.google.protobuf; proto=io.elasticsearch.client.MetricFamily; encoding=compact-text`,
+                    "Content-Type": `application/vnd.google.protobuf; proto=io.metricslog.client.MetricFamily; encoding=compact-text`,
                 },
                 body: bytes.Join(
                     [][]byte{
@@ -587,7 +587,7 @@ collected metric "broken_metric" { label:<name:"foo" value:"bar" > label:<name:"
         },
         { // 16
             headers: map[string]string{
-                "Accept": "application/vnd.google.protobuf;proto=io.elasticsearch.client.MetricFamily;encoding=compact-text",
+                "Accept": "application/vnd.google.protobuf;proto=io.metricslog.client.MetricFamily;encoding=compact-text",
             },
             out: output{
                 headers: map[string]string{
@@ -695,12 +695,12 @@ collected metric "broken_metric" { label:<name:"foo" value:"bar" > label:<name:"
         },
     }
     for i, scenario := range scenarios {
-        registry := elasticsearch.NewPedanticRegistry()
-        gatherer := elasticsearch.Gatherer(registry)
+        registry := metricslog.NewPedanticRegistry()
+        gatherer := metricslog.Gatherer(registry)
         if scenario.externalMF != nil {
-            gatherer = elasticsearch.Gatherers{
+            gatherer = metricslog.Gatherers{
                 registry,
-                elasticsearch.GathererFunc(func() ([]*dto.MetricFamily, error) {
+                metricslog.GathererFunc(func() ([]*dto.MetricFamily, error) {
                     return scenario.externalMF, nil
                 }),
             }
@@ -746,31 +746,31 @@ func BenchmarkHandler(b *testing.B) {
 }
 
 func TestAlreadyRegistered(t *testing.T) {
-    original := elasticsearch.NewCounterVec(
-        elasticsearch.CounterOpts{
+    original := metricslog.NewCounterVec(
+        metricslog.CounterOpts{
             Name:        "test",
             Help:        "help",
-            ConstLabels: elasticsearch.Labels{"const": "label"},
+            ConstLabels: metricslog.Labels{"const": "label"},
         },
         []string{"foo", "bar"},
     )
-    equalButNotSame := elasticsearch.NewCounterVec(
-        elasticsearch.CounterOpts{
+    equalButNotSame := metricslog.NewCounterVec(
+        metricslog.CounterOpts{
             Name:        "test",
             Help:        "help",
-            ConstLabels: elasticsearch.Labels{"const": "label"},
+            ConstLabels: metricslog.Labels{"const": "label"},
         },
         []string{"foo", "bar"},
     )
-    originalWithoutConstLabel := elasticsearch.NewCounterVec(
-        elasticsearch.CounterOpts{
+    originalWithoutConstLabel := metricslog.NewCounterVec(
+        metricslog.CounterOpts{
             Name: "test",
             Help: "help",
         },
         []string{"foo", "bar"},
     )
-    equalButNotSameWithoutConstLabel := elasticsearch.NewCounterVec(
-        elasticsearch.CounterOpts{
+    equalButNotSameWithoutConstLabel := metricslog.NewCounterVec(
+        metricslog.CounterOpts{
             Name: "test",
             Help: "help",
         },
@@ -779,61 +779,61 @@ func TestAlreadyRegistered(t *testing.T) {
 
     scenarios := []struct {
         name              string
-        originalCollector elasticsearch.Collector
-        registerWith      func(elasticsearch.Registerer) elasticsearch.Registerer
-        newCollector      elasticsearch.Collector
-        reRegisterWith    func(elasticsearch.Registerer) elasticsearch.Registerer
+        originalCollector metricslog.Collector
+        registerWith      func(metricslog.Registerer) metricslog.Registerer
+        newCollector      metricslog.Collector
+        reRegisterWith    func(metricslog.Registerer) metricslog.Registerer
     }{
         {
             "RegisterNormallyReregisterNormally",
             original,
-            func(r elasticsearch.Registerer) elasticsearch.Registerer { return r },
+            func(r metricslog.Registerer) metricslog.Registerer { return r },
             equalButNotSame,
-            func(r elasticsearch.Registerer) elasticsearch.Registerer { return r },
+            func(r metricslog.Registerer) metricslog.Registerer { return r },
         },
         {
             "RegisterNormallyReregisterWrapped",
             original,
-            func(r elasticsearch.Registerer) elasticsearch.Registerer { return r },
+            func(r metricslog.Registerer) metricslog.Registerer { return r },
             equalButNotSameWithoutConstLabel,
-            func(r elasticsearch.Registerer) elasticsearch.Registerer {
-                return elasticsearch.WrapRegistererWith(elasticsearch.Labels{"const": "label"}, r)
+            func(r metricslog.Registerer) metricslog.Registerer {
+                return metricslog.WrapRegistererWith(metricslog.Labels{"const": "label"}, r)
             },
         },
         {
             "RegisterWrappedReregisterWrapped",
             originalWithoutConstLabel,
-            func(r elasticsearch.Registerer) elasticsearch.Registerer {
-                return elasticsearch.WrapRegistererWith(elasticsearch.Labels{"const": "label"}, r)
+            func(r metricslog.Registerer) metricslog.Registerer {
+                return metricslog.WrapRegistererWith(metricslog.Labels{"const": "label"}, r)
             },
             equalButNotSameWithoutConstLabel,
-            func(r elasticsearch.Registerer) elasticsearch.Registerer {
-                return elasticsearch.WrapRegistererWith(elasticsearch.Labels{"const": "label"}, r)
+            func(r metricslog.Registerer) metricslog.Registerer {
+                return metricslog.WrapRegistererWith(metricslog.Labels{"const": "label"}, r)
             },
         },
         {
             "RegisterWrappedReregisterNormally",
             originalWithoutConstLabel,
-            func(r elasticsearch.Registerer) elasticsearch.Registerer {
-                return elasticsearch.WrapRegistererWith(elasticsearch.Labels{"const": "label"}, r)
+            func(r metricslog.Registerer) metricslog.Registerer {
+                return metricslog.WrapRegistererWith(metricslog.Labels{"const": "label"}, r)
             },
             equalButNotSame,
-            func(r elasticsearch.Registerer) elasticsearch.Registerer { return r },
+            func(r metricslog.Registerer) metricslog.Registerer { return r },
         },
         {
             "RegisterDoublyWrappedReregisterDoublyWrapped",
             originalWithoutConstLabel,
-            func(r elasticsearch.Registerer) elasticsearch.Registerer {
-                return elasticsearch.WrapRegistererWithPrefix(
+            func(r metricslog.Registerer) metricslog.Registerer {
+                return metricslog.WrapRegistererWithPrefix(
                     "wrap_",
-                    elasticsearch.WrapRegistererWith(elasticsearch.Labels{"const": "label"}, r),
+                    metricslog.WrapRegistererWith(metricslog.Labels{"const": "label"}, r),
                 )
             },
             equalButNotSameWithoutConstLabel,
-            func(r elasticsearch.Registerer) elasticsearch.Registerer {
-                return elasticsearch.WrapRegistererWithPrefix(
+            func(r metricslog.Registerer) metricslog.Registerer {
+                return metricslog.WrapRegistererWithPrefix(
                     "wrap_",
-                    elasticsearch.WrapRegistererWith(elasticsearch.Labels{"const": "label"}, r),
+                    metricslog.WrapRegistererWith(metricslog.Labels{"const": "label"}, r),
                 )
             },
         },
@@ -842,14 +842,14 @@ func TestAlreadyRegistered(t *testing.T) {
     for _, s := range scenarios {
         t.Run(s.name, func(t *testing.T) {
             var err error
-            reg := elasticsearch.NewRegistry()
+            reg := metricslog.NewRegistry()
             if err = s.registerWith(reg).Register(s.originalCollector); err != nil {
                 t.Fatal(err)
             }
             if err = s.reRegisterWith(reg).Register(s.newCollector); err == nil {
                 t.Fatal("expected error when registering new collector")
             }
-            if are, ok := err.(elasticsearch.AlreadyRegisteredError); ok {
+            if are, ok := err.(metricslog.AlreadyRegisteredError); ok {
                 if are.ExistingCollector != s.originalCollector {
                     t.Error("expected original collector but got something else")
                 }
@@ -874,12 +874,12 @@ func TestHistogramVecRegisterGatherConcurrency(t *testing.T) {
     }
 
     var (
-        reg = elasticsearch.NewPedanticRegistry()
-        hv  = elasticsearch.NewHistogramVec(
-            elasticsearch.HistogramOpts{
+        reg = metricslog.NewPedanticRegistry()
+        hv  = metricslog.NewHistogramVec(
+            metricslog.HistogramOpts{
                 Name:        "test_histogram",
                 Help:        "This helps testing.",
-                ConstLabels: elasticsearch.Labels{"foo": "bar"},
+                ConstLabels: metricslog.Labels{"foo": "bar"},
             },
             labelNames,
         )
@@ -913,7 +913,7 @@ func TestHistogramVecRegisterGatherConcurrency(t *testing.T) {
                 return
             default:
                 if err := reg.Register(hv); err != nil {
-                    if _, ok := err.(elasticsearch.AlreadyRegisteredError); !ok {
+                    if _, ok := err.(metricslog.AlreadyRegisteredError); !ok {
                         t.Error("Registering failed:", err)
                     }
                 }
@@ -996,10 +996,10 @@ test_summary_sum{name="foo"} 30
 test_summary_count{name="foo"} 2
 `
 
-    registry := elasticsearch.NewRegistry()
+    registry := metricslog.NewRegistry()
 
-    summary := elasticsearch.NewSummaryVec(
-        elasticsearch.SummaryOpts{
+    summary := metricslog.NewSummaryVec(
+        metricslog.SummaryOpts{
             Name: "test_summary",
             Help: "test summary",
             Objectives: map[float64]float64{
@@ -1011,24 +1011,24 @@ test_summary_count{name="foo"} 2
         []string{"name"},
     )
 
-    histogram := elasticsearch.NewHistogramVec(
-        elasticsearch.HistogramOpts{
+    histogram := metricslog.NewHistogramVec(
+        metricslog.HistogramOpts{
             Name: "test_hist",
             Help: "test histogram",
         },
         []string{"name"},
     )
 
-    gauge := elasticsearch.NewGaugeVec(
-        elasticsearch.GaugeOpts{
+    gauge := metricslog.NewGaugeVec(
+        metricslog.GaugeOpts{
             Name: "test_gauge",
             Help: "test gauge",
         },
         []string{"name"},
     )
 
-    counter := elasticsearch.NewCounterVec(
-        elasticsearch.CounterOpts{
+    counter := metricslog.NewCounterVec(
+        metricslog.CounterOpts{
             Name: "test_counter",
             Help: "test counter",
         },
@@ -1040,12 +1040,12 @@ test_summary_count{name="foo"} 2
     registry.MustRegister(gauge)
     registry.MustRegister(counter)
 
-    summary.With(elasticsearch.Labels{"name": "foo"}).Observe(10)
-    summary.With(elasticsearch.Labels{"name": "foo"}).Observe(20)
-    histogram.With(elasticsearch.Labels{"name": "bar"}).Observe(0.93)
-    histogram.With(elasticsearch.Labels{"name": "bar"}).Observe(2.71)
-    gauge.With(elasticsearch.Labels{"name": "baz"}).Set(1.1)
-    counter.With(elasticsearch.Labels{"name": "qux"}).Inc()
+    summary.With(metricslog.Labels{"name": "foo"}).Observe(10)
+    summary.With(metricslog.Labels{"name": "foo"}).Observe(20)
+    histogram.With(metricslog.Labels{"name": "bar"}).Observe(0.93)
+    histogram.With(metricslog.Labels{"name": "bar"}).Observe(2.71)
+    gauge.With(metricslog.Labels{"name": "baz"}).Set(1.1)
+    counter.With(metricslog.Labels{"name": "qux"}).Inc()
 
     tmpfile, err := ioutil.TempFile("", "prom_registry_test")
     if err != nil {
@@ -1053,7 +1053,7 @@ test_summary_count{name="foo"} 2
     }
     defer os.Remove(tmpfile.Name())
 
-    if err := elasticsearch.WriteToTextfile(tmpfile.Name(), registry); err != nil {
+    if err := metricslog.WriteToTextfile(tmpfile.Name(), registry); err != nil {
         t.Fatal(err)
     }
 

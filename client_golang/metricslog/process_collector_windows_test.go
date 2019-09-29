@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package elasticsearch
+package metricslog
 
 import (
     "bytes"
@@ -19,7 +19,7 @@ import (
     "regexp"
     "testing"
 
-    "github.com/Schneizelw/elasticsearch/common/expfmt"
+    "github.com/Schneizelw/metricslog/common/expfmt"
 )
 
 func TestWindowsProcessCollector(t *testing.T) {

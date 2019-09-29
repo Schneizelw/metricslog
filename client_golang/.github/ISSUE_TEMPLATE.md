@@ -11,7 +11,7 @@
 	potentially respond to your question, and the whole community can benefit
 	from the answers provided (perhaps your question has already been answered,
 	search the archive to find out):
-	https://groups.google.com/forum/#!forum/elasticsearch-users
+	https://groups.google.com/forum/#!forum/metricslog-users
 
 	While a GitHub issue is fine to track progress on an uncontroversial
 	feature request, many feature requests touch the best practices and
@@ -21,9 +21,9 @@
 	discussions happen on the developer mailing list (GitHub issues, in
 	particular closed ones, are not tracked by the wider developer community
 	and thus inadequate):
-	https://groups.google.com/forum/#!forum/elasticsearch-developers
+	https://groups.google.com/forum/#!forum/metricslog-developers
 	
-	You can find more information at: https://elasticsearch.io/community/
+	You can find more information at: https://metricslog.io/community/
 
 -->
 

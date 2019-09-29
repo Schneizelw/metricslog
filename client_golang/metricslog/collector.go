@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package elasticsearch
+package metricslog
 
 // Collector is the interface implemented by anything that can be used by
 // Prometheus to collect metrics. A Collector has to be registered for

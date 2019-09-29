@@ -13,7 +13,7 @@
 
 // Package promauto provides constructors for the usual Prometheus metrics that
 // return them already registered with the global registry
-// (elasticsearch.DefaultRegisterer). This allows very compact code, avoiding any
+// (metricslog.DefaultRegisterer). This allows very compact code, avoiding any
 // references to the registry altogether, but all the constructors in this
 // package will panic if the registration fails.
 //
@@ -26,15 +26,15 @@
 //              "math/rand"
 //              "net/http"
 //
-//              "github.com/Schneizelw/elasticsearch/client_golang/elasticsearch"
-//              "github.com/Schneizelw/elasticsearch/client_golang/elasticsearch/promauto"
-//              "github.com/Schneizelw/elasticsearch/client_golang/elasticsearch/promhttp"
+//              "github.com/Schneizelw/metricslog/client_golang/metricslog"
+//              "github.com/Schneizelw/metricslog/client_golang/metricslog/promauto"
+//              "github.com/Schneizelw/metricslog/client_golang/metricslog/promhttp"
 //      )
 //
-//      var histogram = promauto.NewHistogram(elasticsearch.HistogramOpts{
+//      var histogram = promauto.NewHistogram(metricslog.HistogramOpts{
 //              Name:    "random_numbers",
 //              Help:    "A histogram of normally distributed random numbers.",
-//              Buckets: elasticsearch.LinearBuckets(-3, .1, 61),
+//              Buckets: metricslog.LinearBuckets(-3, .1, 61),
 //      })
 //
 //      func Random() {
@@ -57,15 +57,15 @@
 //          "fmt"
 //          "net/http"
 //
-//          "github.com/Schneizelw/elasticsearch/client_golang/elasticsearch"
-//          "github.com/Schneizelw/elasticsearch/client_golang/elasticsearch/promauto"
-//          "github.com/Schneizelw/elasticsearch/client_golang/elasticsearch/promhttp"
+//          "github.com/Schneizelw/metricslog/client_golang/metricslog"
+//          "github.com/Schneizelw/metricslog/client_golang/metricslog/promauto"
+//          "github.com/Schneizelw/metricslog/client_golang/metricslog/promhttp"
 //      )
 //
 //      func main() {
 //          http.Handle("/", promhttp.InstrumentHandlerCounter(
 //              promauto.NewCounterVec(
-//                  elasticsearch.CounterOpts{
+//                  metricslog.CounterOpts{
 //                      Name: "hello_requests_total",
 //                      Help: "Total number of hello-world requests by HTTP code.",
 //                  },
@@ -83,11 +83,11 @@
 // separate package? There are two caveats:
 //
 // First, in more complex programs, global state is often quite problematic.
-// That's the reason why the metrics constructors in the elasticsearch package do
-// not interact with the global elasticsearch.DefaultRegisterer on their own. You
+// That's the reason why the metrics constructors in the metricslog package do
+// not interact with the global metricslog.DefaultRegisterer on their own. You
 // are free to use the Register or MustRegister functions to register them with
-// the global elasticsearch.DefaultRegisterer, but you could as well choose a local
-// Registerer (usually created with elasticsearch.NewRegistry, but there are other
+// the global metricslog.DefaultRegisterer, but you could as well choose a local
+// Registerer (usually created with metricslog.NewRegistry, but there are other
 // scenarios, e.g. testing).
 //
 // The second issue is that registration may fail, e.g. if a metric inconsistent
@@ -103,8 +103,8 @@
 // later during the runtime (e.g. upon loading some kind of plugin), where the
 // panic could be triggered long after the code has been deployed to
 // production. A possibility to panic should be explicitly called out by the
-// Must… idiom, cf. elasticsearch.MustRegister. But adding a separate set of
-// constructors in the elasticsearch package called MustRegisterNewCounterVec or
+// Must… idiom, cf. metricslog.MustRegister. But adding a separate set of
+// constructors in the metricslog package called MustRegisterNewCounterVec or
 // similar would be quite unwieldy. Adding an extra MustRegister method to each
 // metric, returning the registered metric, would result in nice code for those
 // using the method, but would pollute every single metric interface for
@@ -126,98 +126,98 @@
 // state in net/http has been criticized widely, and some avoid it altogether.
 package promauto
 
-import "github.com/Schneizelw/elasticsearch/client_golang/elasticsearch"
+import "github.com/Schneizelw/metricslog/client_golang/metricslog"
 
-// NewCounter works like the function of the same name in the elasticsearch package
+// NewCounter works like the function of the same name in the metricslog package
 // but it automatically registers the Counter with the
-// elasticsearch.DefaultRegisterer. If the registration fails, NewCounter panics.
-func NewCounter(opts elasticsearch.CounterOpts) elasticsearch.Counter {
-    c := elasticsearch.NewCounter(opts)
-    elasticsearch.MustRegister(c)
+// metricslog.DefaultRegisterer. If the registration fails, NewCounter panics.
+func NewCounter(opts metricslog.CounterOpts) metricslog.Counter {
+    c := metricslog.NewCounter(opts)
+    metricslog.MustRegister(c)
     return c
 }
 
-// NewCounterVec works like the function of the same name in the elasticsearch
+// NewCounterVec works like the function of the same name in the metricslog
 // package but it automatically registers the CounterVec with the
-// elasticsearch.DefaultRegisterer. If the registration fails, NewCounterVec
+// metricslog.DefaultRegisterer. If the registration fails, NewCounterVec
 // panics.
-func NewCounterVec(opts elasticsearch.CounterOpts, labelNames []string) *elasticsearch.CounterVec {
-    c := elasticsearch.NewCounterVec(opts, labelNames)
-    elasticsearch.MustRegister(c)
+func NewCounterVec(opts metricslog.CounterOpts, labelNames []string) *metricslog.CounterVec {
+    c := metricslog.NewCounterVec(opts, labelNames)
+    metricslog.MustRegister(c)
     return c
 }
 
-// NewCounterFunc works like the function of the same name in the elasticsearch
+// NewCounterFunc works like the function of the same name in the metricslog
 // package but it automatically registers the CounterFunc with the
-// elasticsearch.DefaultRegisterer. If the registration fails, NewCounterFunc
+// metricslog.DefaultRegisterer. If the registration fails, NewCounterFunc
 // panics.
-func NewCounterFunc(opts elasticsearch.CounterOpts, function func() float64) elasticsearch.CounterFunc {
-    g := elasticsearch.NewCounterFunc(opts, function)
-    elasticsearch.MustRegister(g)
+func NewCounterFunc(opts metricslog.CounterOpts, function func() float64) metricslog.CounterFunc {
+    g := metricslog.NewCounterFunc(opts, function)
+    metricslog.MustRegister(g)
     return g
 }
 
-// NewGauge works like the function of the same name in the elasticsearch package
+// NewGauge works like the function of the same name in the metricslog package
 // but it automatically registers the Gauge with the
-// elasticsearch.DefaultRegisterer. If the registration fails, NewGauge panics.
-func NewGauge(opts elasticsearch.GaugeOpts) elasticsearch.Gauge {
-    g := elasticsearch.NewGauge(opts)
-    elasticsearch.MustRegister(g)
+// metricslog.DefaultRegisterer. If the registration fails, NewGauge panics.
+func NewGauge(opts metricslog.GaugeOpts) metricslog.Gauge {
+    g := metricslog.NewGauge(opts)
+    metricslog.MustRegister(g)
     return g
 }
 
-// NewGaugeVec works like the function of the same name in the elasticsearch
+// NewGaugeVec works like the function of the same name in the metricslog
 // package but it automatically registers the GaugeVec with the
-// elasticsearch.DefaultRegisterer. If the registration fails, NewGaugeVec panics.
-func NewGaugeVec(opts elasticsearch.GaugeOpts, labelNames []string) *elasticsearch.GaugeVec {
-    g := elasticsearch.NewGaugeVec(opts, labelNames)
-    elasticsearch.MustRegister(g)
+// metricslog.DefaultRegisterer. If the registration fails, NewGaugeVec panics.
+func NewGaugeVec(opts metricslog.GaugeOpts, labelNames []string) *metricslog.GaugeVec {
+    g := metricslog.NewGaugeVec(opts, labelNames)
+    metricslog.MustRegister(g)
     return g
 }
 
-// NewGaugeFunc works like the function of the same name in the elasticsearch
+// NewGaugeFunc works like the function of the same name in the metricslog
 // package but it automatically registers the GaugeFunc with the
-// elasticsearch.DefaultRegisterer. If the registration fails, NewGaugeFunc panics.
-func NewGaugeFunc(opts elasticsearch.GaugeOpts, function func() float64) elasticsearch.GaugeFunc {
-    g := elasticsearch.NewGaugeFunc(opts, function)
-    elasticsearch.MustRegister(g)
+// metricslog.DefaultRegisterer. If the registration fails, NewGaugeFunc panics.
+func NewGaugeFunc(opts metricslog.GaugeOpts, function func() float64) metricslog.GaugeFunc {
+    g := metricslog.NewGaugeFunc(opts, function)
+    metricslog.MustRegister(g)
     return g
 }
 
-// NewSummary works like the function of the same name in the elasticsearch package
+// NewSummary works like the function of the same name in the metricslog package
 // but it automatically registers the Summary with the
-// elasticsearch.DefaultRegisterer. If the registration fails, NewSummary panics.
-func NewSummary(opts elasticsearch.SummaryOpts) elasticsearch.Summary {
-    s := elasticsearch.NewSummary(opts)
-    elasticsearch.MustRegister(s)
+// metricslog.DefaultRegisterer. If the registration fails, NewSummary panics.
+func NewSummary(opts metricslog.SummaryOpts) metricslog.Summary {
+    s := metricslog.NewSummary(opts)
+    metricslog.MustRegister(s)
     return s
 }
 
-// NewSummaryVec works like the function of the same name in the elasticsearch
+// NewSummaryVec works like the function of the same name in the metricslog
 // package but it automatically registers the SummaryVec with the
-// elasticsearch.DefaultRegisterer. If the registration fails, NewSummaryVec
+// metricslog.DefaultRegisterer. If the registration fails, NewSummaryVec
 // panics.
-func NewSummaryVec(opts elasticsearch.SummaryOpts, labelNames []string) *elasticsearch.SummaryVec {
-    s := elasticsearch.NewSummaryVec(opts, labelNames)
-    elasticsearch.MustRegister(s)
+func NewSummaryVec(opts metricslog.SummaryOpts, labelNames []string) *metricslog.SummaryVec {
+    s := metricslog.NewSummaryVec(opts, labelNames)
+    metricslog.MustRegister(s)
     return s
 }
 
-// NewHistogram works like the function of the same name in the elasticsearch
+// NewHistogram works like the function of the same name in the metricslog
 // package but it automatically registers the Histogram with the
-// elasticsearch.DefaultRegisterer. If the registration fails, NewHistogram panics.
-func NewHistogram(opts elasticsearch.HistogramOpts) elasticsearch.Histogram {
-    h := elasticsearch.NewHistogram(opts)
-    elasticsearch.MustRegister(h)
+// metricslog.DefaultRegisterer. If the registration fails, NewHistogram panics.
+func NewHistogram(opts metricslog.HistogramOpts) metricslog.Histogram {
+    h := metricslog.NewHistogram(opts)
+    metricslog.MustRegister(h)
     return h
 }
 
-// NewHistogramVec works like the function of the same name in the elasticsearch
+// NewHistogramVec works like the function of the same name in the metricslog
 // package but it automatically registers the HistogramVec with the
-// elasticsearch.DefaultRegisterer. If the registration fails, NewHistogramVec
+// metricslog.DefaultRegisterer. If the registration fails, NewHistogramVec
 // panics.
-func NewHistogramVec(opts elasticsearch.HistogramOpts, labelNames []string) *elasticsearch.HistogramVec {
-    h := elasticsearch.NewHistogramVec(opts, labelNames)
-    elasticsearch.MustRegister(h)
+func NewHistogramVec(opts metricslog.HistogramOpts, labelNames []string) *metricslog.HistogramVec {
+    h := metricslog.NewHistogramVec(opts, labelNames)
+    metricslog.MustRegister(h)
     return h
 }

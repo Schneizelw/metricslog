@@ -11,28 +11,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package elasticsearch_test
+package metricslog_test
 
 import (
     "math/rand"
     "time"
 
-    "github.com/Schneizelw/elasticsearch/client_golang/elasticsearch"
+    "github.com/Schneizelw/metricslog/client_golang/metricslog"
 )
 
 var (
-    requestDuration = elasticsearch.NewHistogram(elasticsearch.HistogramOpts{
+    requestDuration = metricslog.NewHistogram(metricslog.HistogramOpts{
         Name:    "example_request_duration_seconds",
         Help:    "Histogram for the runtime of a simple example function.",
-        Buckets: elasticsearch.LinearBuckets(0.01, 0.01, 10),
+        Buckets: metricslog.LinearBuckets(0.01, 0.01, 10),
     })
 )
 
 func ExampleTimer() {
     // timer times this example function. It uses a Histogram, but a Summary
     // would also work, as both implement Observer. Check out
-    // https://elasticsearch.io/docs/practices/histograms/ for differences.
-    timer := elasticsearch.NewTimer(requestDuration)
+    // https://metricslog.io/docs/practices/histograms/ for differences.
+    timer := metricslog.NewTimer(requestDuration)
     defer timer.ObserveDuration()
 
     // Do something here that takes time.

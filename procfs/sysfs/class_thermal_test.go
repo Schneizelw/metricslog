@@ -19,7 +19,7 @@ import (
     "reflect"
     "testing"
 
-    "github.com/Schneizelw/elasticsearch/procfs/internal/util"
+    "github.com/Schneizelw/metricslog/procfs/internal/util"
 )
 
 func TestClassThermalZoneStats(t *testing.T) {

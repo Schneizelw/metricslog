@@ -25,12 +25,12 @@ import (
     "sort"
     "time"
 
-    "github.com/Schneizelw/elasticsearch/common/expfmt"
-    "github.com/Schneizelw/elasticsearch/common/model"
+    "github.com/Schneizelw/metricslog/common/expfmt"
+    "github.com/Schneizelw/metricslog/common/model"
 
-    dto "github.com/Schneizelw/elasticsearch/client_model/go"
+    dto "github.com/Schneizelw/metricslog/client_model/go"
 
-    "github.com/Schneizelw/elasticsearch/client_golang/elasticsearch"
+    "github.com/Schneizelw/metricslog/client_golang/metricslog"
 )
 
 const (
@@ -66,8 +66,8 @@ type Config struct {
     // The timeout for pushing metrics to Graphite. Defaults to 15 seconds.
     Timeout time.Duration
 
-    // The Gatherer to use for metrics. Defaults to elasticsearch.DefaultGatherer.
-    Gatherer elasticsearch.Gatherer
+    // The Gatherer to use for metrics. Defaults to metricslog.DefaultGatherer.
+    Gatherer metricslog.Gatherer
 
     // The logger that messages are written to. Defaults to no logging.
     Logger Logger
@@ -88,7 +88,7 @@ type Bridge struct {
     errorHandling HandlerErrorHandling
     logger        Logger
 
-    g elasticsearch.Gatherer
+    g metricslog.Gatherer
 }
 
 // Logger is the minimal interface Bridge needs for logging. Note that
@@ -108,7 +108,7 @@ func NewBridge(c *Config) (*Bridge, error) {
     b.url = c.URL
 
     if c.Gatherer == nil {
-        b.g = elasticsearch.DefaultGatherer
+        b.g = metricslog.DefaultGatherer
     } else {
         b.g = c.Gatherer
     }

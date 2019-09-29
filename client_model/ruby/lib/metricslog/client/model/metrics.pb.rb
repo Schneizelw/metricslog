@@ -1,4 +1,4 @@
-## Generated from metrics.proto for io.elasticsearch.client
+## Generated from metrics.proto for io.metricslog.client
 require "beefcake"
 
 module Prometheus

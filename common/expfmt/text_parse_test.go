@@ -19,7 +19,7 @@ import (
     "testing"
 
     "github.com/golang/protobuf/proto"
-    dto "github.com/Schneizelw/elasticsearch/client_model/go"
+    dto "github.com/Schneizelw/metricslog/client_model/go"
 )
 
 func testTextParse(t testing.TB) {

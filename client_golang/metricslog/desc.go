@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package elasticsearch
+package metricslog
 
 import (
     "errors"
@@ -20,9 +20,9 @@ import (
     "strings"
 
     "github.com/golang/protobuf/proto"
-    "github.com/Schneizelw/elasticsearch/common/model"
+    "github.com/Schneizelw/metricslog/common/model"
 
-    dto "github.com/Schneizelw/elasticsearch/client_model/go"
+    dto "github.com/Schneizelw/metricslog/client_model/go"
 )
 
 // Desc is the descriptor used by every Prometheus Metric. It is essentially

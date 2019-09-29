@@ -20,20 +20,20 @@ import (
     "strings"
     "time"
 
-    dto "github.com/Schneizelw/elasticsearch/client_model/go"
+    dto "github.com/Schneizelw/metricslog/client_model/go"
 
-    "github.com/Schneizelw/elasticsearch/client_golang/elasticsearch"
+    "github.com/Schneizelw/metricslog/client_golang/metricslog"
 )
 
 // magicString is used for the hacky label test in checkLabels. Remove once fixed.
 const magicString = "zZgWfBxLqvG8kc8IMv3POi2Bb0tZI3vAnBx+gBaFi9FyPzB/CzKUer1yufDa"
 
 // InstrumentHandlerInFlight is a middleware that wraps the provided
-// http.Handler. It sets the provided elasticsearch.Gauge to the number of
+// http.Handler. It sets the provided metricslog.Gauge to the number of
 // requests currently handled by the wrapped http.Handler.
 //
 // See the example for InstrumentHandlerDuration for example usage.
-func InstrumentHandlerInFlight(g elasticsearch.Gauge, next http.Handler) http.Handler {
+func InstrumentHandlerInFlight(g metricslog.Gauge, next http.Handler) http.Handler {
     return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
         g.Inc()
         defer g.Dec()
@@ -58,7 +58,7 @@ func InstrumentHandlerInFlight(g elasticsearch.Gauge, next http.Handler) http.Ha
 //
 // Note that this method is only guaranteed to never observe negative durations
 // if used with Go1.9+.
-func InstrumentHandlerDuration(obs elasticsearch.ObserverVec, next http.Handler) http.HandlerFunc {
+func InstrumentHandlerDuration(obs metricslog.ObserverVec, next http.Handler) http.HandlerFunc {
     code, method := checkLabels(obs)
 
     if code {
@@ -91,7 +91,7 @@ func InstrumentHandlerDuration(obs elasticsearch.ObserverVec, next http.Handler)
 // If the wrapped Handler panics, the Counter is not incremented.
 //
 // See the example for InstrumentHandlerDuration for example usage.
-func InstrumentHandlerCounter(counter *elasticsearch.CounterVec, next http.Handler) http.HandlerFunc {
+func InstrumentHandlerCounter(counter *metricslog.CounterVec, next http.Handler) http.HandlerFunc {
     code, method := checkLabels(counter)
 
     if code {
@@ -126,7 +126,7 @@ func InstrumentHandlerCounter(counter *elasticsearch.CounterVec, next http.Handl
 // if used with Go1.9+.
 //
 // See the example for InstrumentHandlerDuration for example usage.
-func InstrumentHandlerTimeToWriteHeader(obs elasticsearch.ObserverVec, next http.Handler) http.HandlerFunc {
+func InstrumentHandlerTimeToWriteHeader(obs metricslog.ObserverVec, next http.Handler) http.HandlerFunc {
     code, method := checkLabels(obs)
 
     return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -154,7 +154,7 @@ func InstrumentHandlerTimeToWriteHeader(obs elasticsearch.ObserverVec, next http
 // If the wrapped Handler panics, no values are reported.
 //
 // See the example for InstrumentHandlerDuration for example usage.
-func InstrumentHandlerRequestSize(obs elasticsearch.ObserverVec, next http.Handler) http.HandlerFunc {
+func InstrumentHandlerRequestSize(obs metricslog.ObserverVec, next http.Handler) http.HandlerFunc {
     code, method := checkLabels(obs)
 
     if code {
@@ -189,7 +189,7 @@ func InstrumentHandlerRequestSize(obs elasticsearch.ObserverVec, next http.Handl
 // If the wrapped Handler panics, no values are reported.
 //
 // See the example for InstrumentHandlerDuration for example usage.
-func InstrumentHandlerResponseSize(obs elasticsearch.ObserverVec, next http.Handler) http.Handler {
+func InstrumentHandlerResponseSize(obs metricslog.ObserverVec, next http.Handler) http.Handler {
     code, method := checkLabels(obs)
     return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
         d := newDelegator(w, nil)
@@ -198,18 +198,18 @@ func InstrumentHandlerResponseSize(obs elasticsearch.ObserverVec, next http.Hand
     })
 }
 
-func checkLabels(c elasticsearch.Collector) (code bool, method bool) {
+func checkLabels(c metricslog.Collector) (code bool, method bool) {
     // TODO(beorn7): Remove this hacky way to check for instance labels
     // once Descriptors can have their dimensionality queried.
     var (
-        desc *elasticsearch.Desc
-        m    elasticsearch.Metric
+        desc *metricslog.Desc
+        m    metricslog.Metric
         pm   dto.Metric
         lvs  []string
     )
 
     // Get the Desc from the Collector.
-    descc := make(chan *elasticsearch.Desc, 1)
+    descc := make(chan *metricslog.Desc, 1)
     c.Describe(descc)
 
     select {
@@ -228,7 +228,7 @@ func checkLabels(c elasticsearch.Collector) (code bool, method bool) {
     // Create a ConstMetric with the Desc. Since we don't know how many
     // variable labels there are, try for as long as it needs.
     for err := errors.New("dummy"); err != nil; lvs = append(lvs, magicString) {
-        m, err = elasticsearch.NewConstMetric(desc, elasticsearch.UntypedValue, 0, lvs...)
+        m, err = metricslog.NewConstMetric(desc, metricslog.UntypedValue, 0, lvs...)
     }
 
     // Write out the metric into a proto message and look at the labels.
@@ -255,18 +255,18 @@ func checkLabels(c elasticsearch.Collector) (code bool, method bool) {
     return
 }
 
-func isLabelCurried(c elasticsearch.Collector, label string) bool {
+func isLabelCurried(c metricslog.Collector, label string) bool {
     // This is even hackier than the label test above.
     // We essentially try to curry again and see if it works.
     // But for that, we need to type-convert to the two
     // types we use here, ObserverVec or *CounterVec.
     switch v := c.(type) {
-    case *elasticsearch.CounterVec:
-        if _, err := v.CurryWith(elasticsearch.Labels{label: "dummy"}); err == nil {
+    case *metricslog.CounterVec:
+        if _, err := v.CurryWith(metricslog.Labels{label: "dummy"}); err == nil {
             return false
         }
-    case elasticsearch.ObserverVec:
-        if _, err := v.CurryWith(elasticsearch.Labels{label: "dummy"}); err == nil {
+    case metricslog.ObserverVec:
+        if _, err := v.CurryWith(metricslog.Labels{label: "dummy"}); err == nil {
             return false
         }
     default:
@@ -277,13 +277,13 @@ func isLabelCurried(c elasticsearch.Collector, label string) bool {
 
 // emptyLabels is a one-time allocation for non-partitioned metrics to avoid
 // unnecessary allocations on each request.
-var emptyLabels = elasticsearch.Labels{}
+var emptyLabels = metricslog.Labels{}
 
-func labels(code, method bool, reqMethod string, status int) elasticsearch.Labels {
+func labels(code, method bool, reqMethod string, status int) metricslog.Labels {
     if !(code || method) {
         return emptyLabels
     }
-    labels := elasticsearch.Labels{}
+    labels := metricslog.Labels{}
 
     if code {
         labels["code"] = sanitizeCode(status)

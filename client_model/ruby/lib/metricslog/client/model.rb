@@ -1,2 +1,2 @@
-require 'elasticsearch/client/model/metrics.pb'
-require 'elasticsearch/client/model/version'
+require 'metricslog/client/model/metrics.pb'
+require 'metricslog/client/model/version'

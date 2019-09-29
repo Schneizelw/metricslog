@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package elasticsearch
+package metricslog
 
 import (
     "strings"
@@ -20,7 +20,7 @@ import (
     "github.com/cihub/seelog"
     "github.com/golang/protobuf/proto"
 
-    dto "github.com/Schneizelw/elasticsearch/client_model/go"
+    dto "github.com/Schneizelw/metricslog/client_model/go"
 )
 
 const separatorByte byte = 255
@@ -88,7 +88,7 @@ type Opts struct {
     // better covered by target labels set by the scraping Prometheus
     // server, or by one specific metric (e.g. a build_info or a
     // machine_role metric). See also
-    // https://elasticsearch.io/docs/instrumenting/writing_exporters/#target-labels,-not-static-scraped-labels
+    // https://metricslog.io/docs/instrumenting/writing_exporters/#target-labels,-not-static-scraped-labels
     ConstLabels Labels
 }
 

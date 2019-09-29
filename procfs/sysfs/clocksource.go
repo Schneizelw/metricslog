@@ -19,7 +19,7 @@ import (
     "path/filepath"
     "strings"
 
-    "github.com/Schneizelw/elasticsearch/procfs/internal/util"
+    "github.com/Schneizelw/metricslog/procfs/internal/util"
 )
 
 // ClockSource contains metrics related to the clock source

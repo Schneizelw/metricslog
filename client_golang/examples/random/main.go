@@ -24,8 +24,8 @@ import (
     "net/http"
     "time"
 
-    "github.com/Schneizelw/elasticsearch/client_golang/elasticsearch"
-    "github.com/Schneizelw/elasticsearch/client_golang/elasticsearch/promhttp"
+    "github.com/Schneizelw/metricslog/client_golang/metricslog"
+    "github.com/Schneizelw/metricslog/client_golang/metricslog/promhttp"
 )
 
 var (
@@ -40,8 +40,8 @@ var (
     // Create a summary to track fictional interservice RPC latencies for three
     // distinct services with different latency distributions. These services are
     // differentiated via a "service" label.
-    rpcDurations = elasticsearch.NewSummaryVec(
-        elasticsearch.SummaryOpts{
+    rpcDurations = metricslog.NewSummaryVec(
+        metricslog.SummaryOpts{
             Name:       "rpc_durations_seconds",
             Help:       "RPC latency distributions.",
             Objectives: map[float64]float64{0.5: 0.05, 0.9: 0.01, 0.99: 0.001},
@@ -52,19 +52,19 @@ var (
     // distribution. The buckets are targeted to the parameters of the
     // normal distribution, with 20 buckets centered on the mean, each
     // half-sigma wide.
-    rpcDurationsHistogram = elasticsearch.NewHistogram(elasticsearch.HistogramOpts{
+    rpcDurationsHistogram = metricslog.NewHistogram(metricslog.HistogramOpts{
         Name:    "rpc_durations_histogram_seconds",
         Help:    "RPC latency distributions.",
-        Buckets: elasticsearch.LinearBuckets(*normMean-5**normDomain, .5**normDomain, 20),
+        Buckets: metricslog.LinearBuckets(*normMean-5**normDomain, .5**normDomain, 20),
     })
 )
 
 func init() {
     // Register the summary and the histogram with Prometheus's default registry.
-    elasticsearch.MustRegister(rpcDurations)
-    elasticsearch.MustRegister(rpcDurationsHistogram)
+    metricslog.MustRegister(rpcDurations)
+    metricslog.MustRegister(rpcDurationsHistogram)
     // Add Go module build info.
-    elasticsearch.MustRegister(elasticsearch.NewBuildInfoCollector())
+    metricslog.MustRegister(metricslog.NewBuildInfoCollector())
 }
 
 func main() {

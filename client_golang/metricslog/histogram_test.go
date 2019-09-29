@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package elasticsearch
+package metricslog
 
 import (
     "math"
@@ -23,7 +23,7 @@ import (
     "testing"
     "testing/quick"
 
-    dto "github.com/Schneizelw/elasticsearch/client_model/go"
+    dto "github.com/Schneizelw/metricslog/client_model/go"
 )
 
 func benchmarkHistogramObserve(w int, b *testing.B) {

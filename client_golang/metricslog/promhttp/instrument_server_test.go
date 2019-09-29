@@ -20,7 +20,7 @@ import (
     "net/http/httptest"
     "testing"
 
-    "github.com/Schneizelw/elasticsearch/client_golang/elasticsearch"
+    "github.com/Schneizelw/metricslog/client_golang/metricslog"
 )
 
 func TestLabelCheck(t *testing.T) {
@@ -100,20 +100,20 @@ func TestLabelCheck(t *testing.T) {
 
     for name, sc := range scenarios {
         t.Run(name, func(t *testing.T) {
-            constLabels := elasticsearch.Labels{}
+            constLabels := metricslog.Labels{}
             for _, l := range sc.constLabels {
                 constLabels[l] = "dummy"
             }
-            c := elasticsearch.NewCounterVec(
-                elasticsearch.CounterOpts{
+            c := metricslog.NewCounterVec(
+                metricslog.CounterOpts{
                     Name:        "c",
                     Help:        "c help",
                     ConstLabels: constLabels,
                 },
                 append(sc.varLabels, sc.curriedLabels...),
             )
-            o := elasticsearch.ObserverVec(elasticsearch.NewHistogramVec(
-                elasticsearch.HistogramOpts{
+            o := metricslog.ObserverVec(metricslog.NewHistogramVec(
+                metricslog.HistogramOpts{
                     Name:        "c",
                     Help:        "c help",
                     ConstLabels: constLabels,
@@ -121,8 +121,8 @@ func TestLabelCheck(t *testing.T) {
                 append(sc.varLabels, sc.curriedLabels...),
             ))
             for _, l := range sc.curriedLabels {
-                c = c.MustCurryWith(elasticsearch.Labels{l: "dummy"})
-                o = o.MustCurryWith(elasticsearch.Labels{l: "dummy"})
+                c = c.MustCurryWith(metricslog.Labels{l: "dummy"})
+                o = o.MustCurryWith(metricslog.Labels{l: "dummy"})
             }
 
             func() {
@@ -180,43 +180,43 @@ func TestLabelCheck(t *testing.T) {
 }
 
 func TestMiddlewareAPI(t *testing.T) {
-    reg := elasticsearch.NewRegistry()
+    reg := metricslog.NewRegistry()
 
-    inFlightGauge := elasticsearch.NewGauge(elasticsearch.GaugeOpts{
+    inFlightGauge := metricslog.NewGauge(metricslog.GaugeOpts{
         Name: "in_flight_requests",
         Help: "A gauge of requests currently being served by the wrapped handler.",
     })
 
-    counter := elasticsearch.NewCounterVec(
-        elasticsearch.CounterOpts{
+    counter := metricslog.NewCounterVec(
+        metricslog.CounterOpts{
             Name: "api_requests_total",
             Help: "A counter for requests to the wrapped handler.",
         },
         []string{"code", "method"},
     )
 
-    histVec := elasticsearch.NewHistogramVec(
-        elasticsearch.HistogramOpts{
+    histVec := metricslog.NewHistogramVec(
+        metricslog.HistogramOpts{
             Name:        "response_duration_seconds",
             Help:        "A histogram of request latencies.",
-            Buckets:     elasticsearch.DefBuckets,
-            ConstLabels: elasticsearch.Labels{"handler": "api"},
+            Buckets:     metricslog.DefBuckets,
+            ConstLabels: metricslog.Labels{"handler": "api"},
         },
         []string{"method"},
     )
 
-    writeHeaderVec := elasticsearch.NewHistogramVec(
-        elasticsearch.HistogramOpts{
+    writeHeaderVec := metricslog.NewHistogramVec(
+        metricslog.HistogramOpts{
             Name:        "write_header_duration_seconds",
             Help:        "A histogram of time to first write latencies.",
-            Buckets:     elasticsearch.DefBuckets,
-            ConstLabels: elasticsearch.Labels{"handler": "api"},
+            Buckets:     metricslog.DefBuckets,
+            ConstLabels: metricslog.Labels{"handler": "api"},
         },
         []string{},
     )
 
-    responseSize := elasticsearch.NewHistogramVec(
-        elasticsearch.HistogramOpts{
+    responseSize := metricslog.NewHistogramVec(
+        metricslog.HistogramOpts{
             Name:    "push_request_size_bytes",
             Help:    "A histogram of request sizes for requests.",
             Buckets: []float64{200, 500, 900, 1500},
@@ -332,13 +332,13 @@ func TestInterfaceUpgrade(t *testing.T) {
 }
 
 func ExampleInstrumentHandlerDuration() {
-    inFlightGauge := elasticsearch.NewGauge(elasticsearch.GaugeOpts{
+    inFlightGauge := metricslog.NewGauge(metricslog.GaugeOpts{
         Name: "in_flight_requests",
         Help: "A gauge of requests currently being served by the wrapped handler.",
     })
 
-    counter := elasticsearch.NewCounterVec(
-        elasticsearch.CounterOpts{
+    counter := metricslog.NewCounterVec(
+        metricslog.CounterOpts{
             Name: "api_requests_total",
             Help: "A counter for requests to the wrapped handler.",
         },
@@ -347,8 +347,8 @@ func ExampleInstrumentHandlerDuration() {
 
     // duration is partitioned by the HTTP method and handler. It uses custom
     // buckets based on the expected request duration.
-    duration := elasticsearch.NewHistogramVec(
-        elasticsearch.HistogramOpts{
+    duration := metricslog.NewHistogramVec(
+        metricslog.HistogramOpts{
             Name:    "request_duration_seconds",
             Help:    "A histogram of latencies for requests.",
             Buckets: []float64{.25, .5, 1, 2.5, 5, 10},
@@ -358,8 +358,8 @@ func ExampleInstrumentHandlerDuration() {
 
     // responseSize has no labels, making it a zero-dimensional
     // ObserverVec.
-    responseSize := elasticsearch.NewHistogramVec(
-        elasticsearch.HistogramOpts{
+    responseSize := metricslog.NewHistogramVec(
+        metricslog.HistogramOpts{
             Name:    "response_size_bytes",
             Help:    "A histogram of response sizes for requests.",
             Buckets: []float64{200, 500, 900, 1500},
@@ -376,19 +376,19 @@ func ExampleInstrumentHandlerDuration() {
     })
 
     // Register all of the metrics in the standard registry.
-    elasticsearch.MustRegister(inFlightGauge, counter, duration, responseSize)
+    metricslog.MustRegister(inFlightGauge, counter, duration, responseSize)
 
     // Instrument the handlers with all the metrics, injecting the "handler"
     // label by currying.
     pushChain := InstrumentHandlerInFlight(inFlightGauge,
-        InstrumentHandlerDuration(duration.MustCurryWith(elasticsearch.Labels{"handler": "push"}),
+        InstrumentHandlerDuration(duration.MustCurryWith(metricslog.Labels{"handler": "push"}),
             InstrumentHandlerCounter(counter,
                 InstrumentHandlerResponseSize(responseSize, pushHandler),
             ),
         ),
     )
     pullChain := InstrumentHandlerInFlight(inFlightGauge,
-        InstrumentHandlerDuration(duration.MustCurryWith(elasticsearch.Labels{"handler": "pull"}),
+        InstrumentHandlerDuration(duration.MustCurryWith(metricslog.Labels{"handler": "pull"}),
             InstrumentHandlerCounter(counter,
                 InstrumentHandlerResponseSize(responseSize, pullHandler),
             ),

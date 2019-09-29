@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package elasticsearch_test
+package metricslog_test
 
 import (
     "expvar"
@@ -19,30 +19,30 @@ import (
     "sort"
     "strings"
 
-    dto "github.com/Schneizelw/elasticsearch/client_model/go"
+    dto "github.com/Schneizelw/metricslog/client_model/go"
 
-    "github.com/Schneizelw/elasticsearch/client_golang/elasticsearch"
+    "github.com/Schneizelw/metricslog/client_golang/metricslog"
 )
 
 func ExampleNewExpvarCollector() {
-    expvarCollector := elasticsearch.NewExpvarCollector(map[string]*elasticsearch.Desc{
-        "memstats": elasticsearch.NewDesc(
+    expvarCollector := metricslog.NewExpvarCollector(map[string]*metricslog.Desc{
+        "memstats": metricslog.NewDesc(
             "expvar_memstats",
             "All numeric memstats as one metric family. Not a good role-model, actually... ;-)",
             []string{"type"}, nil,
         ),
-        "lone-int": elasticsearch.NewDesc(
+        "lone-int": metricslog.NewDesc(
             "expvar_lone_int",
             "Just an expvar int as an example.",
             nil, nil,
         ),
-        "http-request-map": elasticsearch.NewDesc(
+        "http-request-map": metricslog.NewDesc(
             "expvar_http_request_total",
             "How many http requests processed, partitioned by status code and http method.",
             []string{"code", "method"}, nil,
         ),
     })
-    elasticsearch.MustRegister(expvarCollector)
+    metricslog.MustRegister(expvarCollector)
 
     // The Prometheus part is done here. But to show that this example is
     // doing anything, we have to manually export something via expvar.  In
@@ -72,7 +72,7 @@ func ExampleNewExpvarCollector() {
     // Let's see what the scrape would yield, but exclude the memstats metrics.
     metricStrings := []string{}
     metric := dto.Metric{}
-    metricChan := make(chan elasticsearch.Metric)
+    metricChan := make(chan metricslog.Metric)
     go func() {
         expvarCollector.Collect(metricChan)
         close(metricChan)

@@ -11,12 +11,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package elasticsearch_test
+package metricslog_test
 
 import (
     "net/http"
 
-    "github.com/Schneizelw/elasticsearch/client_golang/elasticsearch"
+    "github.com/Schneizelw/metricslog/client_golang/metricslog"
 )
 
 var (
@@ -32,11 +32,11 @@ var (
     // only where you really need separate latency tracking. Partitioning by
     // status class is only an example. In concrete cases, other partitions
     // might make more sense.
-    apiRequestDuration = elasticsearch.NewHistogramVec(
-        elasticsearch.HistogramOpts{
+    apiRequestDuration = metricslog.NewHistogramVec(
+        metricslog.HistogramOpts{
             Name:    "api_request_duration_seconds",
             Help:    "Histogram for the request duration of the public API, partitioned by status class.",
-            Buckets: elasticsearch.ExponentialBuckets(0.1, 1.5, 5),
+            Buckets: metricslog.ExponentialBuckets(0.1, 1.5, 5),
         },
         []string{"status_class"},
     )
@@ -46,7 +46,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
     status := http.StatusOK
     // The ObserverFunc gets called by the deferred ObserveDuration and
     // decides which Histogram's Observe method is called.
-    timer := elasticsearch.NewTimer(elasticsearch.ObserverFunc(func(v float64) {
+    timer := metricslog.NewTimer(metricslog.ObserverFunc(func(v float64) {
         switch {
         case status >= 500: // Server error.
             apiRequestDuration.WithLabelValues("5xx").Observe(v)

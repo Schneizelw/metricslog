@@ -14,7 +14,7 @@
 package sysfs
 
 import (
-    "github.com/Schneizelw/elasticsearch/procfs/internal/fs"
+    "github.com/Schneizelw/metricslog/procfs/internal/fs"
 )
 
 // FS represents the pseudo-filesystem sys, which provides an interface to

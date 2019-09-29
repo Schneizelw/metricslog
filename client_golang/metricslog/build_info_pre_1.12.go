@@ -13,7 +13,7 @@
 
 // +build !go1.12
 
-package elasticsearch
+package metricslog
 
 // readBuildInfo is a wrapper around debug.ReadBuildInfo for Go versions before
 // 1.12. Remove this whole file once the minimum supported Go version is 1.12.

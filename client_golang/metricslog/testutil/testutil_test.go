@@ -17,49 +17,49 @@ import (
     "strings"
     "testing"
 
-    "github.com/Schneizelw/elasticsearch/client_golang/elasticsearch"
+    "github.com/Schneizelw/metricslog/client_golang/metricslog"
 )
 
 type untypedCollector struct{}
 
-func (u untypedCollector) Describe(c chan<- *elasticsearch.Desc) {
-    c <- elasticsearch.NewDesc("name", "help", nil, nil)
+func (u untypedCollector) Describe(c chan<- *metricslog.Desc) {
+    c <- metricslog.NewDesc("name", "help", nil, nil)
 }
 
-func (u untypedCollector) Collect(c chan<- elasticsearch.Metric) {
-    c <- elasticsearch.MustNewConstMetric(
-        elasticsearch.NewDesc("name", "help", nil, nil),
-        elasticsearch.UntypedValue,
+func (u untypedCollector) Collect(c chan<- metricslog.Metric) {
+    c <- metricslog.MustNewConstMetric(
+        metricslog.NewDesc("name", "help", nil, nil),
+        metricslog.UntypedValue,
         2001,
     )
 }
 
 func TestToFloat64(t *testing.T) {
-    gaugeWithAValueSet := elasticsearch.NewGauge(elasticsearch.GaugeOpts{})
+    gaugeWithAValueSet := metricslog.NewGauge(metricslog.GaugeOpts{})
     gaugeWithAValueSet.Set(3.14)
 
-    counterVecWithOneElement := elasticsearch.NewCounterVec(elasticsearch.CounterOpts{}, []string{"foo"})
+    counterVecWithOneElement := metricslog.NewCounterVec(metricslog.CounterOpts{}, []string{"foo"})
     counterVecWithOneElement.WithLabelValues("bar").Inc()
 
-    counterVecWithTwoElements := elasticsearch.NewCounterVec(elasticsearch.CounterOpts{}, []string{"foo"})
+    counterVecWithTwoElements := metricslog.NewCounterVec(metricslog.CounterOpts{}, []string{"foo"})
     counterVecWithTwoElements.WithLabelValues("bar").Add(42)
     counterVecWithTwoElements.WithLabelValues("baz").Inc()
 
-    histogramVecWithOneElement := elasticsearch.NewHistogramVec(elasticsearch.HistogramOpts{}, []string{"foo"})
+    histogramVecWithOneElement := metricslog.NewHistogramVec(metricslog.HistogramOpts{}, []string{"foo"})
     histogramVecWithOneElement.WithLabelValues("bar").Observe(2.7)
 
     scenarios := map[string]struct {
-        collector elasticsearch.Collector
+        collector metricslog.Collector
         panics    bool
         want      float64
     }{
         "simple counter": {
-            collector: elasticsearch.NewCounter(elasticsearch.CounterOpts{}),
+            collector: metricslog.NewCounter(metricslog.CounterOpts{}),
             panics:    false,
             want:      0,
         },
         "simple gauge": {
-            collector: elasticsearch.NewGauge(elasticsearch.GaugeOpts{}),
+            collector: metricslog.NewGauge(metricslog.GaugeOpts{}),
             panics:    false,
             want:      0,
         },
@@ -69,11 +69,11 @@ func TestToFloat64(t *testing.T) {
             want:      2001,
         },
         "simple histogram": {
-            collector: elasticsearch.NewHistogram(elasticsearch.HistogramOpts{}),
+            collector: metricslog.NewHistogram(metricslog.HistogramOpts{}),
             panics:    true,
         },
         "simple summary": {
-            collector: elasticsearch.NewSummary(elasticsearch.SummaryOpts{}),
+            collector: metricslog.NewSummary(metricslog.SummaryOpts{}),
             panics:    true,
         },
         "simple gauge with an actual value set": {
@@ -82,7 +82,7 @@ func TestToFloat64(t *testing.T) {
             want:      3.14,
         },
         "counter vec with zero elements": {
-            collector: elasticsearch.NewCounterVec(elasticsearch.CounterOpts{}, nil),
+            collector: metricslog.NewCounterVec(metricslog.CounterOpts{}, nil),
             panics:    true,
         },
         "counter vec with one element": {
@@ -124,10 +124,10 @@ func TestCollectAndCompare(t *testing.T) {
         # TYPE some_total counter
     `
 
-    c := elasticsearch.NewCounter(elasticsearch.CounterOpts{
+    c := metricslog.NewCounter(metricslog.CounterOpts{
         Name: "some_total",
         Help: "A value that represents a counter.",
-        ConstLabels: elasticsearch.Labels{
+        ConstLabels: metricslog.Labels{
             "label1": "value1",
         },
     })
@@ -149,7 +149,7 @@ func TestCollectAndCompareNoLabel(t *testing.T) {
         # TYPE some_total counter
     `
 
-    c := elasticsearch.NewCounter(elasticsearch.CounterOpts{
+    c := metricslog.NewCounter(metricslog.CounterOpts{
         Name: "some_total",
         Help: "A value that represents a counter.",
     })
@@ -168,14 +168,14 @@ func TestCollectAndCompareNoLabel(t *testing.T) {
 func TestCollectAndCompareHistogram(t *testing.T) {
     inputs := []struct {
         name        string
-        c           elasticsearch.Collector
+        c           metricslog.Collector
         metadata    string
         expect      string
         observation float64
     }{
         {
             name: "Testing Histogram Collector",
-            c: elasticsearch.NewHistogram(elasticsearch.HistogramOpts{
+            c: metricslog.NewHistogram(metricslog.HistogramOpts{
                 Name:    "some_histogram",
                 Help:    "An example of a histogram",
                 Buckets: []float64{1, 2, 3},
@@ -197,7 +197,7 @@ func TestCollectAndCompareHistogram(t *testing.T) {
         },
         {
             name: "Testing HistogramVec Collector",
-            c: elasticsearch.NewHistogramVec(elasticsearch.HistogramOpts{
+            c: metricslog.NewHistogramVec(metricslog.HistogramOpts{
                 Name:    "some_histogram",
                 Help:    "An example of a histogram",
                 Buckets: []float64{1, 2, 3},
@@ -222,9 +222,9 @@ func TestCollectAndCompareHistogram(t *testing.T) {
 
     for _, input := range inputs {
         switch collector := input.c.(type) {
-        case elasticsearch.Histogram:
+        case metricslog.Histogram:
             collector.Observe(input.observation)
-        case *elasticsearch.HistogramVec:
+        case *metricslog.HistogramVec:
             collector.WithLabelValues("test").Observe(input.observation)
         default:
             t.Fatalf("unsuported collector tested")
@@ -246,10 +246,10 @@ func TestNoMetricFilter(t *testing.T) {
         # TYPE some_total counter
     `
 
-    c := elasticsearch.NewCounter(elasticsearch.CounterOpts{
+    c := metricslog.NewCounter(metricslog.CounterOpts{
         Name: "some_total",
         Help: "A value that represents a counter.",
-        ConstLabels: elasticsearch.Labels{
+        ConstLabels: metricslog.Labels{
             "label1": "value1",
         },
     })
@@ -270,10 +270,10 @@ func TestMetricNotFound(t *testing.T) {
         # TYPE some_other_metric counter
     `
 
-    c := elasticsearch.NewCounter(elasticsearch.CounterOpts{
+    c := metricslog.NewCounter(metricslog.CounterOpts{
         Name: "some_total",
         Help: "A value that represents a counter.",
-        ConstLabels: elasticsearch.Labels{
+        ConstLabels: metricslog.Labels{
             "label1": "value1",
         },
     })

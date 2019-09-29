@@ -20,7 +20,7 @@ import (
     "strconv"
     "strings"
 
-    "github.com/Schneizelw/elasticsearch/procfs/internal/util"
+    "github.com/Schneizelw/metricslog/procfs/internal/util"
 )
 
 // Crypto holds info parsed from /proc/crypto.

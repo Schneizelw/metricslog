@@ -19,7 +19,7 @@ import (
     "net/http/httptrace"
     "time"
 
-    "github.com/Schneizelw/elasticsearch/client_golang/elasticsearch"
+    "github.com/Schneizelw/metricslog/client_golang/metricslog"
 )
 
 // The RoundTripperFunc type is an adapter to allow the use of ordinary
@@ -33,11 +33,11 @@ func (rt RoundTripperFunc) RoundTrip(r *http.Request) (*http.Response, error) {
 }
 
 // InstrumentRoundTripperInFlight is a middleware that wraps the provided
-// http.RoundTripper. It sets the provided elasticsearch.Gauge to the number of
+// http.RoundTripper. It sets the provided metricslog.Gauge to the number of
 // requests currently handled by the wrapped http.RoundTripper.
 //
 // See the example for ExampleInstrumentRoundTripperDuration for example usage.
-func InstrumentRoundTripperInFlight(gauge elasticsearch.Gauge, next http.RoundTripper) RoundTripperFunc {
+func InstrumentRoundTripperInFlight(gauge metricslog.Gauge, next http.RoundTripper) RoundTripperFunc {
     return RoundTripperFunc(func(r *http.Request) (*http.Response, error) {
         gauge.Inc()
         defer gauge.Dec()
@@ -57,7 +57,7 @@ func InstrumentRoundTripperInFlight(gauge elasticsearch.Gauge, next http.RoundTr
 // is not incremented.
 //
 // See the example for ExampleInstrumentRoundTripperDuration for example usage.
-func InstrumentRoundTripperCounter(counter *elasticsearch.CounterVec, next http.RoundTripper) RoundTripperFunc {
+func InstrumentRoundTripperCounter(counter *metricslog.CounterVec, next http.RoundTripper) RoundTripperFunc {
     code, method := checkLabels(counter)
 
     return RoundTripperFunc(func(r *http.Request) (*http.Response, error) {
@@ -85,7 +85,7 @@ func InstrumentRoundTripperCounter(counter *elasticsearch.CounterVec, next http.
 //
 // Note that this method is only guaranteed to never observe negative durations
 // if used with Go1.9+.
-func InstrumentRoundTripperDuration(obs elasticsearch.ObserverVec, next http.RoundTripper) RoundTripperFunc {
+func InstrumentRoundTripperDuration(obs metricslog.ObserverVec, next http.RoundTripper) RoundTripperFunc {
     code, method := checkLabels(obs)
 
     return RoundTripperFunc(func(r *http.Request) (*http.Response, error) {

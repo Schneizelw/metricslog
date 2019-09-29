@@ -31,7 +31,7 @@
 //
 // See the documentation of the Pushgateway to understand the meaning of
 // the grouping key and the differences between Push and Add:
-// https://github.com/Schneizelw/elasticsearch/pushgateway
+// https://github.com/Schneizelw/metricslog/pushgateway
 package push
 
 import (
@@ -43,10 +43,10 @@ import (
     "net/url"
     "strings"
 
-    "github.com/Schneizelw/elasticsearch/common/expfmt"
-    "github.com/Schneizelw/elasticsearch/common/model"
+    "github.com/Schneizelw/metricslog/common/expfmt"
+    "github.com/Schneizelw/metricslog/common/model"
 
-    "github.com/Schneizelw/elasticsearch/client_golang/elasticsearch"
+    "github.com/Schneizelw/metricslog/client_golang/metricslog"
 )
 
 const (
@@ -69,8 +69,8 @@ type Pusher struct {
     url, job string
     grouping map[string]string
 
-    gatherers  elasticsearch.Gatherers
-    registerer elasticsearch.Registerer
+    gatherers  metricslog.Gatherers
+    registerer metricslog.Registerer
 
     client             HTTPDoer
     useBasicAuth       bool
@@ -85,7 +85,7 @@ type Pusher struct {
 // URL. However, do not include the “/metrics/jobs/…” part.
 func New(url, job string) *Pusher {
     var (
-        reg = elasticsearch.NewRegistry()
+        reg = metricslog.NewRegistry()
         err error
     )
     if !strings.Contains(url, "://") {
@@ -100,7 +100,7 @@ func New(url, job string) *Pusher {
         url:        url,
         job:        job,
         grouping:   map[string]string{},
-        gatherers:  elasticsearch.Gatherers{reg},
+        gatherers:  metricslog.Gatherers{reg},
         registerer: reg,
         client:     &http.Client{},
         expfmt:     expfmt.FmtProtoDelim,
@@ -132,7 +132,7 @@ func (p *Pusher) Add() error {
 // label of their own.
 //
 // For convenience, this method returns a pointer to the Pusher itself.
-func (p *Pusher) Gatherer(g elasticsearch.Gatherer) *Pusher {
+func (p *Pusher) Gatherer(g metricslog.Gatherer) *Pusher {
     p.gatherers = append(p.gatherers, g)
     return p
 }
@@ -142,7 +142,7 @@ func (p *Pusher) Gatherer(g elasticsearch.Gatherer) *Pusher {
 // contain a job label of their own.
 //
 // For convenience, this method returns a pointer to the Pusher itself.
-func (p *Pusher) Collector(c elasticsearch.Collector) *Pusher {
+func (p *Pusher) Collector(c metricslog.Collector) *Pusher {
     if p.error == nil {
         p.error = p.registerer.Register(c)
     }

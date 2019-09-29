@@ -1,5 +1,5 @@
 # Common
-[![Build Status](https://travis-ci.org/elasticsearch/common.svg)](https://travis-ci.org/elasticsearch/common)
+[![Build Status](https://travis-ci.org/metricslog/common.svg)](https://travis-ci.org/metricslog/common)
 
 This repository contains Go libraries that are shared across Prometheus
 components and libraries.

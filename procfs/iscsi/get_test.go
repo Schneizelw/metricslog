@@ -17,7 +17,7 @@ import (
     "reflect"
     "testing"
 
-    "github.com/Schneizelw/elasticsearch/procfs/iscsi"
+    "github.com/Schneizelw/metricslog/procfs/iscsi"
 )
 
 func TestGetStats(t *testing.T) {

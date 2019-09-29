@@ -26,9 +26,9 @@ import (
     "testing"
     "time"
 
-    "github.com/Schneizelw/elasticsearch/common/model"
+    "github.com/Schneizelw/metricslog/common/model"
 
-    "github.com/Schneizelw/elasticsearch/client_golang/elasticsearch"
+    "github.com/Schneizelw/metricslog/client_golang/metricslog"
 )
 
 func TestSanitize(t *testing.T) {
@@ -62,11 +62,11 @@ func TestSanitize(t *testing.T) {
 }
 
 func TestWriteSummary(t *testing.T) {
-    sumVec := elasticsearch.NewSummaryVec(
-        elasticsearch.SummaryOpts{
+    sumVec := metricslog.NewSummaryVec(
+        metricslog.SummaryOpts{
             Name:        "name",
             Help:        "docstring",
-            ConstLabels: elasticsearch.Labels{"constname": "constvalue"},
+            ConstLabels: metricslog.Labels{"constname": "constvalue"},
             Objectives:  map[float64]float64{0.5: 0.05, 0.9: 0.01, 0.99: 0.001},
         },
         []string{"labelname"},
@@ -79,7 +79,7 @@ func TestWriteSummary(t *testing.T) {
     sumVec.WithLabelValues("val2").Observe(float64(30))
     sumVec.WithLabelValues("val2").Observe(float64(40))
 
-    reg := elasticsearch.NewRegistry()
+    reg := metricslog.NewRegistry()
     reg.MustRegister(sumVec)
 
     mfs, err := reg.Gather()
@@ -126,11 +126,11 @@ func TestWriteSummary(t *testing.T) {
 }
 
 func TestWriteHistogram(t *testing.T) {
-    histVec := elasticsearch.NewHistogramVec(
-        elasticsearch.HistogramOpts{
+    histVec := metricslog.NewHistogramVec(
+        metricslog.HistogramOpts{
             Name:        "name",
             Help:        "docstring",
-            ConstLabels: elasticsearch.Labels{"constname": "constvalue"},
+            ConstLabels: metricslog.Labels{"constname": "constvalue"},
             Buckets:     []float64{0.01, 0.02, 0.05, 0.1},
         },
         []string{"labelname"},
@@ -143,7 +143,7 @@ func TestWriteHistogram(t *testing.T) {
     histVec.WithLabelValues("val2").Observe(float64(30))
     histVec.WithLabelValues("val2").Observe(float64(40))
 
-    reg := elasticsearch.NewRegistry()
+    reg := metricslog.NewRegistry()
     reg.MustRegister(histVec)
 
     mfs, err := reg.Gather()
@@ -179,18 +179,18 @@ prefix.name_bucket.constname.constvalue.labelname.val2.le._Inf 3 1477043
 }
 
 func TestToReader(t *testing.T) {
-    cntVec := elasticsearch.NewCounterVec(
-        elasticsearch.CounterOpts{
+    cntVec := metricslog.NewCounterVec(
+        metricslog.CounterOpts{
             Name:        "name",
             Help:        "docstring",
-            ConstLabels: elasticsearch.Labels{"constname": "constvalue"},
+            ConstLabels: metricslog.Labels{"constname": "constvalue"},
         },
         []string{"labelname"},
     )
     cntVec.WithLabelValues("val1").Inc()
     cntVec.WithLabelValues("val2").Inc()
 
-    reg := elasticsearch.NewRegistry()
+    reg := metricslog.NewRegistry()
     reg.MustRegister(cntVec)
 
     want := `prefix.name.constname.constvalue.labelname.val1 1 1477043
@@ -214,12 +214,12 @@ prefix.name.constname.constvalue.labelname.val2 1 1477043
 }
 
 func TestPush(t *testing.T) {
-    reg := elasticsearch.NewRegistry()
-    cntVec := elasticsearch.NewCounterVec(
-        elasticsearch.CounterOpts{
+    reg := metricslog.NewRegistry()
+    cntVec := metricslog.NewCounterVec(
+        metricslog.CounterOpts{
             Name:        "name",
             Help:        "docstring",
-            ConstLabels: elasticsearch.Labels{"constname": "constvalue"},
+            ConstLabels: metricslog.Labels{"constname": "constvalue"},
         },
         []string{"labelname"},
     )
@@ -308,7 +308,7 @@ type mockGraphite struct {
 func ExampleBridge() {
     b, err := NewBridge(&Config{
         URL:           "graphite.example.org:3099",
-        Gatherer:      elasticsearch.DefaultGatherer,
+        Gatherer:      metricslog.DefaultGatherer,
         Prefix:        "prefix",
         Interval:      15 * time.Second,
         Timeout:       10 * time.Second,

@@ -22,10 +22,10 @@ import (
     "strconv"
     "strings"
 
-    dto "github.com/Schneizelw/elasticsearch/client_model/go"
+    dto "github.com/Schneizelw/metricslog/client_model/go"
 
     "github.com/golang/protobuf/proto"
-    "github.com/Schneizelw/elasticsearch/common/model"
+    "github.com/Schneizelw/metricslog/common/model"
 )
 
 // A stateFn is a function that represents a state in a state machine. By

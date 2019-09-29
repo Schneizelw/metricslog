@@ -22,7 +22,7 @@
 //      "fmt"
 //      "log"
 //
-//      "github.com/Schneizelw/elasticsearch/procfs"
+//      "github.com/Schneizelw/metricslog/procfs"
 //    )
 //
 //    func main() {

@@ -22,30 +22,30 @@ import (
     "testing"
     "time"
 
-    "github.com/Schneizelw/elasticsearch/client_golang/elasticsearch"
+    "github.com/Schneizelw/metricslog/client_golang/metricslog"
 )
 
-func makeInstrumentedClient() (*http.Client, *elasticsearch.Registry) {
+func makeInstrumentedClient() (*http.Client, *metricslog.Registry) {
     client := http.DefaultClient
     client.Timeout = 1 * time.Second
 
-    reg := elasticsearch.NewRegistry()
+    reg := metricslog.NewRegistry()
 
-    inFlightGauge := elasticsearch.NewGauge(elasticsearch.GaugeOpts{
+    inFlightGauge := metricslog.NewGauge(metricslog.GaugeOpts{
         Name: "client_in_flight_requests",
         Help: "A gauge of in-flight requests for the wrapped client.",
     })
 
-    counter := elasticsearch.NewCounterVec(
-        elasticsearch.CounterOpts{
+    counter := metricslog.NewCounterVec(
+        metricslog.CounterOpts{
             Name: "client_api_requests_total",
             Help: "A counter for requests from the wrapped client.",
         },
         []string{"code", "method"},
     )
 
-    dnsLatencyVec := elasticsearch.NewHistogramVec(
-        elasticsearch.HistogramOpts{
+    dnsLatencyVec := metricslog.NewHistogramVec(
+        metricslog.HistogramOpts{
             Name:    "dns_duration_seconds",
             Help:    "Trace dns latency histogram.",
             Buckets: []float64{.005, .01, .025, .05},
@@ -53,8 +53,8 @@ func makeInstrumentedClient() (*http.Client, *elasticsearch.Registry) {
         []string{"event"},
     )
 
-    tlsLatencyVec := elasticsearch.NewHistogramVec(
-        elasticsearch.HistogramOpts{
+    tlsLatencyVec := metricslog.NewHistogramVec(
+        metricslog.HistogramOpts{
             Name:    "tls_duration_seconds",
             Help:    "Trace tls latency histogram.",
             Buckets: []float64{.05, .1, .25, .5},
@@ -62,11 +62,11 @@ func makeInstrumentedClient() (*http.Client, *elasticsearch.Registry) {
         []string{"event"},
     )
 
-    histVec := elasticsearch.NewHistogramVec(
-        elasticsearch.HistogramOpts{
+    histVec := metricslog.NewHistogramVec(
+        metricslog.HistogramOpts{
             Name:    "request_duration_seconds",
             Help:    "A histogram of request latencies.",
-            Buckets: elasticsearch.DefBuckets,
+            Buckets: metricslog.DefBuckets,
         },
         []string{"method"},
     )
@@ -195,13 +195,13 @@ func ExampleInstrumentRoundTripperDuration() {
     client := http.DefaultClient
     client.Timeout = 1 * time.Second
 
-    inFlightGauge := elasticsearch.NewGauge(elasticsearch.GaugeOpts{
+    inFlightGauge := metricslog.NewGauge(metricslog.GaugeOpts{
         Name: "client_in_flight_requests",
         Help: "A gauge of in-flight requests for the wrapped client.",
     })
 
-    counter := elasticsearch.NewCounterVec(
-        elasticsearch.CounterOpts{
+    counter := metricslog.NewCounterVec(
+        metricslog.CounterOpts{
             Name: "client_api_requests_total",
             Help: "A counter for requests from the wrapped client.",
         },
@@ -212,8 +212,8 @@ func ExampleInstrumentRoundTripperDuration() {
     // It has an instance label "event", which is set in the
     // DNSStart and DNSDonehook functions defined in the
     // InstrumentTrace struct below.
-    dnsLatencyVec := elasticsearch.NewHistogramVec(
-        elasticsearch.HistogramOpts{
+    dnsLatencyVec := metricslog.NewHistogramVec(
+        metricslog.HistogramOpts{
             Name:    "dns_duration_seconds",
             Help:    "Trace dns latency histogram.",
             Buckets: []float64{.005, .01, .025, .05},
@@ -225,8 +225,8 @@ func ExampleInstrumentRoundTripperDuration() {
     // It has an instance label "event", which is set in the
     // TLSHandshakeStart and TLSHandshakeDone hook functions defined in the
     // InstrumentTrace struct below.
-    tlsLatencyVec := elasticsearch.NewHistogramVec(
-        elasticsearch.HistogramOpts{
+    tlsLatencyVec := metricslog.NewHistogramVec(
+        metricslog.HistogramOpts{
             Name:    "tls_duration_seconds",
             Help:    "Trace tls latency histogram.",
             Buckets: []float64{.05, .1, .25, .5},
@@ -235,17 +235,17 @@ func ExampleInstrumentRoundTripperDuration() {
     )
 
     // histVec has no labels, making it a zero-dimensional ObserverVec.
-    histVec := elasticsearch.NewHistogramVec(
-        elasticsearch.HistogramOpts{
+    histVec := metricslog.NewHistogramVec(
+        metricslog.HistogramOpts{
             Name:    "request_duration_seconds",
             Help:    "A histogram of request latencies.",
-            Buckets: elasticsearch.DefBuckets,
+            Buckets: metricslog.DefBuckets,
         },
         []string{},
     )
 
     // Register all of the metrics in the standard registry.
-    elasticsearch.MustRegister(counter, tlsLatencyVec, dnsLatencyVec, histVec, inFlightGauge)
+    metricslog.MustRegister(counter, tlsLatencyVec, dnsLatencyVec, histVec, inFlightGauge)
 
     // Define functions for the available httptrace.ClientTrace hook
     // functions that we want to instrument.

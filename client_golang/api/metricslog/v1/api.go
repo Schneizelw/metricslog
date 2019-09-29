@@ -12,7 +12,7 @@
 // limitations under the License.
 
 // Package v1 provides bindings to the Prometheus HTTP API v1:
-// http://elasticsearch.io/docs/querying/api/
+// http://metricslog.io/docs/querying/api/
 package v1
 
 import (
@@ -27,9 +27,9 @@ import (
 
     json "github.com/json-iterator/go"
 
-    "github.com/Schneizelw/elasticsearch/common/model"
+    "github.com/Schneizelw/metricslog/common/model"
 
-    "github.com/Schneizelw/elasticsearch/client_golang/api"
+    "github.com/Schneizelw/metricslog/client_golang/api"
 )
 
 func init() {

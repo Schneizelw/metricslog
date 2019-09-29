@@ -17,24 +17,24 @@ import (
     "fmt"
     "time"
 
-    "github.com/Schneizelw/elasticsearch/client_golang/elasticsearch"
-    "github.com/Schneizelw/elasticsearch/client_golang/elasticsearch/push"
+    "github.com/Schneizelw/metricslog/client_golang/metricslog"
+    "github.com/Schneizelw/metricslog/client_golang/metricslog/push"
 )
 
 var (
-    completionTime = elasticsearch.NewGauge(elasticsearch.GaugeOpts{
+    completionTime = metricslog.NewGauge(metricslog.GaugeOpts{
         Name: "db_backup_last_completion_timestamp_seconds",
         Help: "The timestamp of the last completion of a DB backup, successful or not.",
     })
-    successTime = elasticsearch.NewGauge(elasticsearch.GaugeOpts{
+    successTime = metricslog.NewGauge(metricslog.GaugeOpts{
         Name: "db_backup_last_success_timestamp_seconds",
         Help: "The timestamp of the last successful completion of a DB backup.",
     })
-    duration = elasticsearch.NewGauge(elasticsearch.GaugeOpts{
+    duration = metricslog.NewGauge(metricslog.GaugeOpts{
         Name: "db_backup_duration_seconds",
         Help: "The duration of the last DB backup in seconds.",
     })
-    records = elasticsearch.NewGauge(elasticsearch.GaugeOpts{
+    records = metricslog.NewGauge(metricslog.GaugeOpts{
         Name: "db_backup_records_processed",
         Help: "The number of records processed in the last DB backup.",
     })
@@ -50,7 +50,7 @@ func performBackup() (int, error) {
 func ExamplePusher_Add() {
     // We use a registry here to benefit from the consistency checks that
     // happen during registration.
-    registry := elasticsearch.NewRegistry()
+    registry := metricslog.NewRegistry()
     registry.MustRegister(completionTime, duration, records)
     // Note that successTime is not registered.
 

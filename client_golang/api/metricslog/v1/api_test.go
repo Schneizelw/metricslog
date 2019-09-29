@@ -27,9 +27,9 @@ import (
 
     json "github.com/json-iterator/go"
 
-    "github.com/Schneizelw/elasticsearch/common/model"
+    "github.com/Schneizelw/metricslog/common/model"
 
-    "github.com/Schneizelw/elasticsearch/client_golang/api"
+    "github.com/Schneizelw/metricslog/client_golang/api"
 )
 
 type apiTest struct {
@@ -401,7 +401,7 @@ func TestAPIs(t *testing.T) {
             inRes: []map[string]string{
                 {
                     "__name__": "up",
-                    "job":      "elasticsearch",
+                    "job":      "metricslog",
                     "instance": "localhost:9090"},
             },
             reqMethod: "GET",
@@ -414,7 +414,7 @@ func TestAPIs(t *testing.T) {
             res: []model.LabelSet{
                 {
                     "__name__": "up",
-                    "job":      "elasticsearch",
+                    "job":      "metricslog",
                     "instance": "localhost:9090",
                 },
             },
@@ -425,7 +425,7 @@ func TestAPIs(t *testing.T) {
             inRes: []map[string]string{
                 {
                     "__name__": "up",
-                    "job":      "elasticsearch",
+                    "job":      "metricslog",
                     "instance": "localhost:9090"},
             },
             inWarnings: []string{"a"},
@@ -439,7 +439,7 @@ func TestAPIs(t *testing.T) {
             res: []model.LabelSet{
                 {
                     "__name__": "up",
-                    "job":      "elasticsearch",
+                    "job":      "metricslog",
                     "instance": "localhost:9090",
                 },
             },
@@ -516,7 +516,7 @@ func TestAPIs(t *testing.T) {
             inRes: []map[string]string{
                 {
                     "__name__": "up",
-                    "job":      "elasticsearch",
+                    "job":      "metricslog",
                     "instance": "localhost:9090"},
             },
             reqMethod: "POST",
@@ -740,11 +740,11 @@ func TestAPIs(t *testing.T) {
                             "__address__":      "127.0.0.1:9090",
                             "__metrics_path__": "/metrics",
                             "__scheme__":       "http",
-                            "job":              "elasticsearch",
+                            "job":              "metricslog",
                         },
                         "labels": map[string]string{
                             "instance": "127.0.0.1:9090",
-                            "job":      "elasticsearch",
+                            "job":      "metricslog",
                         },
                         "scrapeUrl":  "http://127.0.0.1:9090",
                         "lastError":  "error while scraping target",
@@ -770,11 +770,11 @@ func TestAPIs(t *testing.T) {
                             "__address__":      "127.0.0.1:9090",
                             "__metrics_path__": "/metrics",
                             "__scheme__":       "http",
-                            "job":              "elasticsearch",
+                            "job":              "metricslog",
                         },
                         Labels: model.LabelSet{
                             "instance": "127.0.0.1:9090",
-                            "job":      "elasticsearch",
+                            "job":      "metricslog",
                         },
                         ScrapeURL:  "http://127.0.0.1:9090",
                         LastError:  "error while scraping target",
@@ -804,12 +804,12 @@ func TestAPIs(t *testing.T) {
         },
 
         {
-            do: doTargetsMetadata("{job=\"elasticsearch\"}", "go_goroutines", "1"),
+            do: doTargetsMetadata("{job=\"metricslog\"}", "go_goroutines", "1"),
             inRes: []map[string]interface{}{
                 {
                     "target": map[string]interface{}{
                         "instance": "127.0.0.1:9090",
-                        "job":      "elasticsearch",
+                        "job":      "metricslog",
                     },
                     "type": "gauge",
                     "help": "Number of goroutines that currently exist.",
@@ -819,7 +819,7 @@ func TestAPIs(t *testing.T) {
             reqMethod: "GET",
             reqPath:   "/api/v1/targets/metadata",
             reqParam: url.Values{
-                "match_target": []string{"{job=\"elasticsearch\"}"},
+                "match_target": []string{"{job=\"metricslog\"}"},
                 "metric":       []string{"go_goroutines"},
                 "limit":        []string{"1"},
             },
@@ -827,7 +827,7 @@ func TestAPIs(t *testing.T) {
                 {
                     Target: map[string]string{
                         "instance": "127.0.0.1:9090",
-                        "job":      "elasticsearch",
+                        "job":      "metricslog",
                     },
                     Type: "gauge",
                     Help: "Number of goroutines that currently exist.",
@@ -837,12 +837,12 @@ func TestAPIs(t *testing.T) {
         },
 
         {
-            do:        doTargetsMetadata("{job=\"elasticsearch\"}", "go_goroutines", "1"),
+            do:        doTargetsMetadata("{job=\"metricslog\"}", "go_goroutines", "1"),
             inErr:     fmt.Errorf("some error"),
             reqMethod: "GET",
             reqPath:   "/api/v1/targets/metadata",
             reqParam: url.Values{
-                "match_target": []string{"{job=\"elasticsearch\"}"},
+                "match_target": []string{"{job=\"metricslog\"}"},
                 "metric":       []string{"go_goroutines"},
                 "limit":        []string{"1"},
             },

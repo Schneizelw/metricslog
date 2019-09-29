@@ -20,7 +20,7 @@ import (
 
     jsoniter "github.com/json-iterator/go"
 
-    "github.com/Schneizelw/elasticsearch/common/model"
+    "github.com/Schneizelw/metricslog/common/model"
 )
 
 func generateData(timeseries, datapoints int) model.Matrix {

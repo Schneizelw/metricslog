@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package elasticsearch
+package metricslog
 
 import (
     "fmt"
@@ -25,7 +25,7 @@ import (
     "github.com/beorn7/perks/quantile"
     "github.com/golang/protobuf/proto"
 
-    dto "github.com/Schneizelw/elasticsearch/client_model/go"
+    dto "github.com/Schneizelw/metricslog/client_model/go"
 )
 
 // quantileLabel is used for the label that defines the quantile in a
@@ -112,7 +112,7 @@ type SummaryOpts struct {
     // better covered by target labels set by the scraping Prometheus
     // server, or by one specific metric (e.g. a build_info or a
     // machine_role metric). See also
-    // https://elasticsearch.io/docs/instrumenting/writing_exporters/#target-labels,-not-static-scraped-labels
+    // https://metricslog.io/docs/instrumenting/writing_exporters/#target-labels,-not-static-scraped-labels
     ConstLabels Labels
 
     // Objectives defines the quantile rank estimates with their respective
@@ -624,7 +624,7 @@ func (v *SummaryVec) WithLabelValues(lvs ...string) Observer {
 
 // With works as GetMetricWith, but panics where GetMetricWithLabels would have
 // returned an error. Not returning an error allows shortcuts like
-//     myVec.With(elasticsearch.Labels{"code": "404", "method": "GET"}).Observe(42.21)
+//     myVec.With(metricslog.Labels{"code": "404", "method": "GET"}).Observe(42.21)
 func (v *SummaryVec) With(labels Labels) Observer {
     s, err := v.GetMetricWith(labels)
     if err != nil {

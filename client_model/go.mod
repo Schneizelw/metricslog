@@ -1,4 +1,4 @@
-module github.com/Schneizelw/elasticsearch/client_model
+module github.com/Schneizelw/metricslog/client_model
 
 go 1.9
 

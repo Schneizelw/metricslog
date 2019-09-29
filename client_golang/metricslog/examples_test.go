@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package elasticsearch_test
+package metricslog_test
 
 import (
     "bytes"
@@ -23,22 +23,22 @@ import (
     "time"
 
     "github.com/golang/protobuf/proto"
-    "github.com/Schneizelw/elasticsearch/common/expfmt"
+    "github.com/Schneizelw/metricslog/common/expfmt"
 
-    dto "github.com/Schneizelw/elasticsearch/client_model/go"
+    dto "github.com/Schneizelw/metricslog/client_model/go"
 
-    "github.com/Schneizelw/elasticsearch/client_golang/elasticsearch"
-    "github.com/Schneizelw/elasticsearch/client_golang/elasticsearch/promhttp"
+    "github.com/Schneizelw/metricslog/client_golang/metricslog"
+    "github.com/Schneizelw/metricslog/client_golang/metricslog/promhttp"
 )
 
 func ExampleGauge() {
-    opsQueued := elasticsearch.NewGauge(elasticsearch.GaugeOpts{
+    opsQueued := metricslog.NewGauge(metricslog.GaugeOpts{
         Namespace: "our_company",
         Subsystem: "blob_storage",
         Name:      "ops_queued",
         Help:      "Number of blob storage operations waiting to be processed.",
     })
-    elasticsearch.MustRegister(opsQueued)
+    metricslog.MustRegister(opsQueued)
 
     // 10 operations queued by the goroutine managing incoming requests.
     opsQueued.Add(10)
@@ -49,8 +49,8 @@ func ExampleGauge() {
 }
 
 func ExampleGaugeVec() {
-    opsQueued := elasticsearch.NewGaugeVec(
-        elasticsearch.GaugeOpts{
+    opsQueued := metricslog.NewGaugeVec(
+        metricslog.GaugeOpts{
             Namespace: "our_company",
             Subsystem: "blob_storage",
             Name:      "ops_queued",
@@ -63,18 +63,18 @@ func ExampleGaugeVec() {
             "type",
         },
     )
-    elasticsearch.MustRegister(opsQueued)
+    metricslog.MustRegister(opsQueued)
 
     // Increase a value using compact (but order-sensitive!) WithLabelValues().
     opsQueued.WithLabelValues("bob", "put").Add(4)
     // Increase a value with a map using WithLabels. More verbose, but order
     // doesn't matter anymore.
-    opsQueued.With(elasticsearch.Labels{"type": "delete", "user": "alice"}).Inc()
+    opsQueued.With(metricslog.Labels{"type": "delete", "user": "alice"}).Inc()
 }
 
 func ExampleGaugeFunc() {
-    if err := elasticsearch.Register(elasticsearch.NewGaugeFunc(
-        elasticsearch.GaugeOpts{
+    if err := metricslog.Register(metricslog.NewGaugeFunc(
+        metricslog.GaugeOpts{
             Subsystem: "runtime",
             Name:      "goroutines_count",
             Help:      "Number of goroutines that currently exist.",
@@ -91,14 +91,14 @@ func ExampleGaugeFunc() {
 }
 
 func ExampleCounterVec() {
-    httpReqs := elasticsearch.NewCounterVec(
-        elasticsearch.CounterOpts{
+    httpReqs := metricslog.NewCounterVec(
+        metricslog.CounterOpts{
             Name: "http_requests_total",
             Help: "How many HTTP requests processed, partitioned by status code and HTTP method.",
         },
         []string{"code", "method"},
     )
-    elasticsearch.MustRegister(httpReqs)
+    metricslog.MustRegister(httpReqs)
 
     httpReqs.WithLabelValues("404", "POST").Add(42)
 
@@ -115,18 +115,18 @@ func ExampleCounterVec() {
     // later).
     httpReqs.DeleteLabelValues("200", "GET")
     // Same thing with the more verbose Labels syntax.
-    httpReqs.Delete(elasticsearch.Labels{"method": "GET", "code": "200"})
+    httpReqs.Delete(metricslog.Labels{"method": "GET", "code": "200"})
 }
 
 func ExampleRegister() {
     // Imagine you have a worker pool and want to count the tasks completed.
-    taskCounter := elasticsearch.NewCounter(elasticsearch.CounterOpts{
+    taskCounter := metricslog.NewCounter(metricslog.CounterOpts{
         Subsystem: "worker_pool",
         Name:      "completed_tasks_total",
         Help:      "Total number of tasks completed.",
     })
     // This will register fine.
-    if err := elasticsearch.Register(taskCounter); err != nil {
+    if err := metricslog.Register(taskCounter); err != nil {
         fmt.Println(err)
     } else {
         fmt.Println("taskCounter registered.")
@@ -141,8 +141,8 @@ func ExampleRegister() {
 
     // But wait, you want to see how individual workers perform. So you need
     // a vector of counters, with one element for each worker.
-    taskCounterVec := elasticsearch.NewCounterVec(
-        elasticsearch.CounterOpts{
+    taskCounterVec := metricslog.NewCounterVec(
+        metricslog.CounterOpts{
             Subsystem: "worker_pool",
             Name:      "completed_tasks_total",
             Help:      "Total number of tasks completed.",
@@ -151,19 +151,19 @@ func ExampleRegister() {
     )
 
     // Registering will fail because we already have a metric of that name.
-    if err := elasticsearch.Register(taskCounterVec); err != nil {
+    if err := metricslog.Register(taskCounterVec); err != nil {
         fmt.Println("taskCounterVec not registered:", err)
     } else {
         fmt.Println("taskCounterVec registered.")
     }
 
     // To fix, first unregister the old taskCounter.
-    if elasticsearch.Unregister(taskCounter) {
+    if metricslog.Unregister(taskCounter) {
         fmt.Println("taskCounter unregistered.")
     }
 
     // Try registering taskCounterVec again.
-    if err := elasticsearch.Register(taskCounterVec); err != nil {
+    if err := metricslog.Register(taskCounterVec); err != nil {
         fmt.Println("taskCounterVec not registered:", err)
     } else {
         fmt.Println("taskCounterVec registered.")
@@ -177,15 +177,15 @@ func ExampleRegister() {
     // been exported before. For this example, we will now choose a
     // different name. (In a real program, you would obviously not export
     // the obsolete metric in the first place.)
-    taskCounterVec = elasticsearch.NewCounterVec(
-        elasticsearch.CounterOpts{
+    taskCounterVec = metricslog.NewCounterVec(
+        metricslog.CounterOpts{
             Subsystem: "worker_pool",
             Name:      "completed_tasks_by_id",
             Help:      "Total number of tasks completed.",
         },
         []string{"worker_id"},
     )
-    if err := elasticsearch.Register(taskCounterVec); err != nil {
+    if err := metricslog.Register(taskCounterVec); err != nil {
         fmt.Println("taskCounterVec not registered:", err)
     } else {
         fmt.Println("taskCounterVec registered.")
@@ -219,14 +219,14 @@ func ExampleRegister() {
     // ConstLabels. Those Counters can all be registered because the
     // different ConstLabel values guarantee that each worker will increment
     // a different Counter metric.
-    counterOpts := elasticsearch.CounterOpts{
+    counterOpts := metricslog.CounterOpts{
         Subsystem:   "worker_pool",
         Name:        "completed_tasks",
         Help:        "Total number of tasks completed.",
-        ConstLabels: elasticsearch.Labels{"worker_id": "42"},
+        ConstLabels: metricslog.Labels{"worker_id": "42"},
     }
-    taskCounterForWorker42 := elasticsearch.NewCounter(counterOpts)
-    if err := elasticsearch.Register(taskCounterForWorker42); err != nil {
+    taskCounterForWorker42 := metricslog.NewCounter(counterOpts)
+    if err := metricslog.Register(taskCounterForWorker42); err != nil {
         fmt.Println("taskCounterVForWorker42 not registered:", err)
     } else {
         fmt.Println("taskCounterForWorker42 registered.")
@@ -238,9 +238,9 @@ func ExampleRegister() {
 
     // For the creation of the next Counter, we can recycle
     // counterOpts. Just change the ConstLabels.
-    counterOpts.ConstLabels = elasticsearch.Labels{"worker_id": "2001"}
-    taskCounterForWorker2001 := elasticsearch.NewCounter(counterOpts)
-    if err := elasticsearch.Register(taskCounterForWorker2001); err != nil {
+    counterOpts.ConstLabels = metricslog.Labels{"worker_id": "2001"}
+    taskCounterForWorker2001 := metricslog.NewCounter(counterOpts)
+    if err := metricslog.Register(taskCounterForWorker2001); err != nil {
         fmt.Println("taskCounterVForWorker2001 not registered:", err)
     } else {
         fmt.Println("taskCounterForWorker2001 registered.")
@@ -266,7 +266,7 @@ func ExampleRegister() {
 }
 
 func ExampleSummary() {
-    temps := elasticsearch.NewSummary(elasticsearch.SummaryOpts{
+    temps := metricslog.NewSummary(metricslog.SummaryOpts{
         Name:       "pond_temperature_celsius",
         Help:       "The temperature of the frog pond.",
         Objectives: map[float64]float64{0.5: 0.05, 0.9: 0.01, 0.99: 0.001},
@@ -304,8 +304,8 @@ func ExampleSummary() {
 }
 
 func ExampleSummaryVec() {
-    temps := elasticsearch.NewSummaryVec(
-        elasticsearch.SummaryOpts{
+    temps := metricslog.NewSummaryVec(
+        metricslog.SummaryOpts{
             Name:       "pond_temperature_celsius",
             Help:       "The temperature of the frog pond.",
             Objectives: map[float64]float64{0.5: 0.05, 0.9: 0.01, 0.99: 0.001},
@@ -325,7 +325,7 @@ func ExampleSummaryVec() {
     // Just for demonstration, let's check the state of the summary vector
     // by registering it with a custom registry and then let it collect the
     // metrics.
-    reg := elasticsearch.NewRegistry()
+    reg := metricslog.NewRegistry()
     reg.MustRegister(temps)
 
     metricFamilies, err := reg.Gather()
@@ -407,15 +407,15 @@ func ExampleSummaryVec() {
 }
 
 func ExampleNewConstSummary() {
-    desc := elasticsearch.NewDesc(
+    desc := metricslog.NewDesc(
         "http_request_duration_seconds",
         "A summary of the HTTP request durations.",
         []string{"code", "method"},
-        elasticsearch.Labels{"owner": "example"},
+        metricslog.Labels{"owner": "example"},
     )
 
     // Create a constant summary from values we got from a 3rd party telemetry system.
-    s := elasticsearch.MustNewConstSummary(
+    s := metricslog.MustNewConstSummary(
         desc,
         4711, 403.34,
         map[float64]float64{0.5: 42.3, 0.9: 323.3},
@@ -457,10 +457,10 @@ func ExampleNewConstSummary() {
 }
 
 func ExampleHistogram() {
-    temps := elasticsearch.NewHistogram(elasticsearch.HistogramOpts{
+    temps := metricslog.NewHistogram(metricslog.HistogramOpts{
         Name:    "pond_temperature_celsius",
         Help:    "The temperature of the frog pond.", // Sorry, we can't measure how badly it smells.
-        Buckets: elasticsearch.LinearBuckets(20, 5, 5),  // 5 buckets, each 5 centigrade wide.
+        Buckets: metricslog.LinearBuckets(20, 5, 5),  // 5 buckets, each 5 centigrade wide.
     })
 
     // Simulate some observations.
@@ -503,15 +503,15 @@ func ExampleHistogram() {
 }
 
 func ExampleNewConstHistogram() {
-    desc := elasticsearch.NewDesc(
+    desc := metricslog.NewDesc(
         "http_request_duration_seconds",
         "A histogram of the HTTP request durations.",
         []string{"code", "method"},
-        elasticsearch.Labels{"owner": "example"},
+        metricslog.Labels{"owner": "example"},
     )
 
     // Create a constant histogram from values we got from a 3rd party telemetry system.
-    h := elasticsearch.MustNewConstHistogram(
+    h := metricslog.MustNewConstHistogram(
         desc,
         4711, 403.34,
         map[float64]uint64{25: 121, 50: 2403, 100: 3221, 200: 4233},
@@ -561,15 +561,15 @@ func ExampleNewConstHistogram() {
 }
 
 func ExampleAlreadyRegisteredError() {
-    reqCounter := elasticsearch.NewCounter(elasticsearch.CounterOpts{
+    reqCounter := metricslog.NewCounter(metricslog.CounterOpts{
         Name: "requests_total",
         Help: "The total number of requests served.",
     })
-    if err := elasticsearch.Register(reqCounter); err != nil {
-        if are, ok := err.(elasticsearch.AlreadyRegisteredError); ok {
+    if err := metricslog.Register(reqCounter); err != nil {
+        if are, ok := err.(metricslog.AlreadyRegisteredError); ok {
             // A counter for that metric has been registered before.
             // Use the old counter from now on.
-            reqCounter = are.ExistingCollector.(elasticsearch.Counter)
+            reqCounter = are.ExistingCollector.(metricslog.Counter)
         } else {
             // Something else went wrong!
             panic(err)
@@ -579,9 +579,9 @@ func ExampleAlreadyRegisteredError() {
 }
 
 func ExampleGatherers() {
-    reg := elasticsearch.NewRegistry()
-    temp := elasticsearch.NewGaugeVec(
-        elasticsearch.GaugeOpts{
+    reg := metricslog.NewRegistry()
+    temp := metricslog.NewGaugeVec(
+        metricslog.GaugeOpts{
             Name: "temperature_kelvin",
             Help: "Temperature in Kelvin.",
         },
@@ -615,9 +615,9 @@ temperature_kelvin{location="somewhere else"} 4.5
         return result, nil
     }
 
-    gatherers := elasticsearch.Gatherers{
+    gatherers := metricslog.Gatherers{
         reg,
-        elasticsearch.GathererFunc(parseText),
+        metricslog.GathererFunc(parseText),
     }
 
     gathering, err := gatherers.Gather()
@@ -686,7 +686,7 @@ temperature_kelvin 4.5
 }
 
 func ExampleNewMetricWithTimestamp() {
-    desc := elasticsearch.NewDesc(
+    desc := metricslog.NewDesc(
         "temperature_kelvin",
         "Current temperature in Kelvin.",
         nil, nil,
@@ -697,10 +697,10 @@ func ExampleNewMetricWithTimestamp() {
     // delay, so we want to add the timestamp of the actual measurement.
     temperatureReportedByExternalSystem := 298.15
     timeReportedByExternalSystem := time.Date(2009, time.November, 10, 23, 0, 0, 12345678, time.UTC)
-    s := elasticsearch.NewMetricWithTimestamp(
+    s := metricslog.NewMetricWithTimestamp(
         timeReportedByExternalSystem,
-        elasticsearch.MustNewConstMetric(
-            desc, elasticsearch.GaugeValue, temperatureReportedByExternalSystem,
+        metricslog.MustNewConstMetric(
+            desc, metricslog.GaugeValue, temperatureReportedByExternalSystem,
         ),
     )
 

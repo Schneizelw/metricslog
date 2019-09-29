@@ -20,7 +20,7 @@ import (
     "strings"
     "text/template"
 
-    "github.com/Schneizelw/elasticsearch/client_golang/elasticsearch"
+    "github.com/Schneizelw/metricslog/client_golang/metricslog"
 )
 
 // Build information. Populated at build-time.
@@ -34,9 +34,9 @@ var (
 )
 
 // NewCollector returns a collector which exports metrics about current version information.
-func NewCollector(program string) *elasticsearch.GaugeVec {
-    buildInfo := elasticsearch.NewGaugeVec(
-        elasticsearch.GaugeOpts{
+func NewCollector(program string) *metricslog.GaugeVec {
+    buildInfo := metricslog.NewGaugeVec(
+        metricslog.GaugeOpts{
             Namespace: program,
             Name:      "build_info",
             Help: fmt.Sprintf(

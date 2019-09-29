@@ -1,4 +1,4 @@
-module github.com/Schneizelw/elasticsearch/procfs
+module github.com/Schneizelw/metricslog/procfs
 
 require (
 	github.com/google/go-cmp v0.3.0

@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package elasticsearch
+package metricslog
 
 import (
     "runtime"
@@ -373,7 +373,7 @@ type memStatsMetrics []struct {
 // the source repository (rather than the local file system). This is usually
 // accomplished by building from outside of GOPATH, specifying the full address
 // of the main package, e.g. "GO111MODULE=on go run
-// github.com/Schneizelw/elasticsearch/client_golang/examples/random". If built without Go
+// github.com/Schneizelw/metricslog/client_golang/examples/random". If built without Go
 // module support, all label values will be "unknown". If built with Go module
 // support but using the source code from the local file system, the "path" will
 // be set appropriately, but "checksum" will be empty and "version" will be

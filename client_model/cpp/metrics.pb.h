@@ -28,7 +28,7 @@
 // @@protoc_insertion_point(includes)
 
 namespace io {
-namespace elasticsearch {
+namespace metricslog {
 namespace client {
 
 // Internal implementation detail -- do not call these.
@@ -148,7 +148,7 @@ class LabelPair : public ::google::protobuf::Message {
   inline ::std::string* release_value();
   inline void set_allocated_value(::std::string* value);
 
-  // @@protoc_insertion_point(class_scope:io.elasticsearch.client.LabelPair)
+  // @@protoc_insertion_point(class_scope:io.metricslog.client.LabelPair)
  private:
   inline void set_has_name();
   inline void clear_has_name();
@@ -230,7 +230,7 @@ class Gauge : public ::google::protobuf::Message {
   inline double value() const;
   inline void set_value(double value);
 
-  // @@protoc_insertion_point(class_scope:io.elasticsearch.client.Gauge)
+  // @@protoc_insertion_point(class_scope:io.metricslog.client.Gauge)
  private:
   inline void set_has_value();
   inline void clear_has_value();
@@ -309,7 +309,7 @@ class Counter : public ::google::protobuf::Message {
   inline double value() const;
   inline void set_value(double value);
 
-  // @@protoc_insertion_point(class_scope:io.elasticsearch.client.Counter)
+  // @@protoc_insertion_point(class_scope:io.metricslog.client.Counter)
  private:
   inline void set_has_value();
   inline void clear_has_value();
@@ -395,7 +395,7 @@ class Quantile : public ::google::protobuf::Message {
   inline double value() const;
   inline void set_value(double value);
 
-  // @@protoc_insertion_point(class_scope:io.elasticsearch.client.Quantile)
+  // @@protoc_insertion_point(class_scope:io.metricslog.client.Quantile)
  private:
   inline void set_has_quantile();
   inline void clear_has_quantile();
@@ -484,19 +484,19 @@ class Summary : public ::google::protobuf::Message {
   inline double sample_sum() const;
   inline void set_sample_sum(double value);
 
-  // repeated .io.elasticsearch.client.Quantile quantile = 3;
+  // repeated .io.metricslog.client.Quantile quantile = 3;
   inline int quantile_size() const;
   inline void clear_quantile();
   static const int kQuantileFieldNumber = 3;
-  inline const ::io::elasticsearch::client::Quantile& quantile(int index) const;
-  inline ::io::elasticsearch::client::Quantile* mutable_quantile(int index);
-  inline ::io::elasticsearch::client::Quantile* add_quantile();
-  inline const ::google::protobuf::RepeatedPtrField< ::io::elasticsearch::client::Quantile >&
+  inline const ::io::metricslog::client::Quantile& quantile(int index) const;
+  inline ::io::metricslog::client::Quantile* mutable_quantile(int index);
+  inline ::io::metricslog::client::Quantile* add_quantile();
+  inline const ::google::protobuf::RepeatedPtrField< ::io::metricslog::client::Quantile >&
       quantile() const;
-  inline ::google::protobuf::RepeatedPtrField< ::io::elasticsearch::client::Quantile >*
+  inline ::google::protobuf::RepeatedPtrField< ::io::metricslog::client::Quantile >*
       mutable_quantile();
 
-  // @@protoc_insertion_point(class_scope:io.elasticsearch.client.Summary)
+  // @@protoc_insertion_point(class_scope:io.metricslog.client.Summary)
  private:
   inline void set_has_sample_count();
   inline void clear_has_sample_count();
@@ -509,7 +509,7 @@ class Summary : public ::google::protobuf::Message {
   mutable int _cached_size_;
   ::google::protobuf::uint64 sample_count_;
   double sample_sum_;
-  ::google::protobuf::RepeatedPtrField< ::io::elasticsearch::client::Quantile > quantile_;
+  ::google::protobuf::RepeatedPtrField< ::io::metricslog::client::Quantile > quantile_;
   friend void  protobuf_AddDesc_metrics_2eproto();
   friend void protobuf_AssignDesc_metrics_2eproto();
   friend void protobuf_ShutdownFile_metrics_2eproto();
@@ -579,7 +579,7 @@ class Untyped : public ::google::protobuf::Message {
   inline double value() const;
   inline void set_value(double value);
 
-  // @@protoc_insertion_point(class_scope:io.elasticsearch.client.Untyped)
+  // @@protoc_insertion_point(class_scope:io.metricslog.client.Untyped)
  private:
   inline void set_has_value();
   inline void clear_has_value();
@@ -665,19 +665,19 @@ class Histogram : public ::google::protobuf::Message {
   inline double sample_sum() const;
   inline void set_sample_sum(double value);
 
-  // repeated .io.elasticsearch.client.Bucket bucket = 3;
+  // repeated .io.metricslog.client.Bucket bucket = 3;
   inline int bucket_size() const;
   inline void clear_bucket();
   static const int kBucketFieldNumber = 3;
-  inline const ::io::elasticsearch::client::Bucket& bucket(int index) const;
-  inline ::io::elasticsearch::client::Bucket* mutable_bucket(int index);
-  inline ::io::elasticsearch::client::Bucket* add_bucket();
-  inline const ::google::protobuf::RepeatedPtrField< ::io::elasticsearch::client::Bucket >&
+  inline const ::io::metricslog::client::Bucket& bucket(int index) const;
+  inline ::io::metricslog::client::Bucket* mutable_bucket(int index);
+  inline ::io::metricslog::client::Bucket* add_bucket();
+  inline const ::google::protobuf::RepeatedPtrField< ::io::metricslog::client::Bucket >&
       bucket() const;
-  inline ::google::protobuf::RepeatedPtrField< ::io::elasticsearch::client::Bucket >*
+  inline ::google::protobuf::RepeatedPtrField< ::io::metricslog::client::Bucket >*
       mutable_bucket();
 
-  // @@protoc_insertion_point(class_scope:io.elasticsearch.client.Histogram)
+  // @@protoc_insertion_point(class_scope:io.metricslog.client.Histogram)
  private:
   inline void set_has_sample_count();
   inline void clear_has_sample_count();
@@ -690,7 +690,7 @@ class Histogram : public ::google::protobuf::Message {
   mutable int _cached_size_;
   ::google::protobuf::uint64 sample_count_;
   double sample_sum_;
-  ::google::protobuf::RepeatedPtrField< ::io::elasticsearch::client::Bucket > bucket_;
+  ::google::protobuf::RepeatedPtrField< ::io::metricslog::client::Bucket > bucket_;
   friend void  protobuf_AddDesc_metrics_2eproto();
   friend void protobuf_AssignDesc_metrics_2eproto();
   friend void protobuf_ShutdownFile_metrics_2eproto();
@@ -767,7 +767,7 @@ class Bucket : public ::google::protobuf::Message {
   inline double upper_bound() const;
   inline void set_upper_bound(double value);
 
-  // @@protoc_insertion_point(class_scope:io.elasticsearch.client.Bucket)
+  // @@protoc_insertion_point(class_scope:io.metricslog.client.Bucket)
  private:
   inline void set_has_cumulative_count();
   inline void clear_has_cumulative_count();
@@ -842,62 +842,62 @@ class Metric : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // repeated .io.elasticsearch.client.LabelPair label = 1;
+  // repeated .io.metricslog.client.LabelPair label = 1;
   inline int label_size() const;
   inline void clear_label();
   static const int kLabelFieldNumber = 1;
-  inline const ::io::elasticsearch::client::LabelPair& label(int index) const;
-  inline ::io::elasticsearch::client::LabelPair* mutable_label(int index);
-  inline ::io::elasticsearch::client::LabelPair* add_label();
-  inline const ::google::protobuf::RepeatedPtrField< ::io::elasticsearch::client::LabelPair >&
+  inline const ::io::metricslog::client::LabelPair& label(int index) const;
+  inline ::io::metricslog::client::LabelPair* mutable_label(int index);
+  inline ::io::metricslog::client::LabelPair* add_label();
+  inline const ::google::protobuf::RepeatedPtrField< ::io::metricslog::client::LabelPair >&
       label() const;
-  inline ::google::protobuf::RepeatedPtrField< ::io::elasticsearch::client::LabelPair >*
+  inline ::google::protobuf::RepeatedPtrField< ::io::metricslog::client::LabelPair >*
       mutable_label();
 
-  // optional .io.elasticsearch.client.Gauge gauge = 2;
+  // optional .io.metricslog.client.Gauge gauge = 2;
   inline bool has_gauge() const;
   inline void clear_gauge();
   static const int kGaugeFieldNumber = 2;
-  inline const ::io::elasticsearch::client::Gauge& gauge() const;
-  inline ::io::elasticsearch::client::Gauge* mutable_gauge();
-  inline ::io::elasticsearch::client::Gauge* release_gauge();
-  inline void set_allocated_gauge(::io::elasticsearch::client::Gauge* gauge);
+  inline const ::io::metricslog::client::Gauge& gauge() const;
+  inline ::io::metricslog::client::Gauge* mutable_gauge();
+  inline ::io::metricslog::client::Gauge* release_gauge();
+  inline void set_allocated_gauge(::io::metricslog::client::Gauge* gauge);
 
-  // optional .io.elasticsearch.client.Counter counter = 3;
+  // optional .io.metricslog.client.Counter counter = 3;
   inline bool has_counter() const;
   inline void clear_counter();
   static const int kCounterFieldNumber = 3;
-  inline const ::io::elasticsearch::client::Counter& counter() const;
-  inline ::io::elasticsearch::client::Counter* mutable_counter();
-  inline ::io::elasticsearch::client::Counter* release_counter();
-  inline void set_allocated_counter(::io::elasticsearch::client::Counter* counter);
+  inline const ::io::metricslog::client::Counter& counter() const;
+  inline ::io::metricslog::client::Counter* mutable_counter();
+  inline ::io::metricslog::client::Counter* release_counter();
+  inline void set_allocated_counter(::io::metricslog::client::Counter* counter);
 
-  // optional .io.elasticsearch.client.Summary summary = 4;
+  // optional .io.metricslog.client.Summary summary = 4;
   inline bool has_summary() const;
   inline void clear_summary();
   static const int kSummaryFieldNumber = 4;
-  inline const ::io::elasticsearch::client::Summary& summary() const;
-  inline ::io::elasticsearch::client::Summary* mutable_summary();
-  inline ::io::elasticsearch::client::Summary* release_summary();
-  inline void set_allocated_summary(::io::elasticsearch::client::Summary* summary);
+  inline const ::io::metricslog::client::Summary& summary() const;
+  inline ::io::metricslog::client::Summary* mutable_summary();
+  inline ::io::metricslog::client::Summary* release_summary();
+  inline void set_allocated_summary(::io::metricslog::client::Summary* summary);
 
-  // optional .io.elasticsearch.client.Untyped untyped = 5;
+  // optional .io.metricslog.client.Untyped untyped = 5;
   inline bool has_untyped() const;
   inline void clear_untyped();
   static const int kUntypedFieldNumber = 5;
-  inline const ::io::elasticsearch::client::Untyped& untyped() const;
-  inline ::io::elasticsearch::client::Untyped* mutable_untyped();
-  inline ::io::elasticsearch::client::Untyped* release_untyped();
-  inline void set_allocated_untyped(::io::elasticsearch::client::Untyped* untyped);
+  inline const ::io::metricslog::client::Untyped& untyped() const;
+  inline ::io::metricslog::client::Untyped* mutable_untyped();
+  inline ::io::metricslog::client::Untyped* release_untyped();
+  inline void set_allocated_untyped(::io::metricslog::client::Untyped* untyped);
 
-  // optional .io.elasticsearch.client.Histogram histogram = 7;
+  // optional .io.metricslog.client.Histogram histogram = 7;
   inline bool has_histogram() const;
   inline void clear_histogram();
   static const int kHistogramFieldNumber = 7;
-  inline const ::io::elasticsearch::client::Histogram& histogram() const;
-  inline ::io::elasticsearch::client::Histogram* mutable_histogram();
-  inline ::io::elasticsearch::client::Histogram* release_histogram();
-  inline void set_allocated_histogram(::io::elasticsearch::client::Histogram* histogram);
+  inline const ::io::metricslog::client::Histogram& histogram() const;
+  inline ::io::metricslog::client::Histogram* mutable_histogram();
+  inline ::io::metricslog::client::Histogram* release_histogram();
+  inline void set_allocated_histogram(::io::metricslog::client::Histogram* histogram);
 
   // optional int64 timestamp_ms = 6;
   inline bool has_timestamp_ms() const;
@@ -906,7 +906,7 @@ class Metric : public ::google::protobuf::Message {
   inline ::google::protobuf::int64 timestamp_ms() const;
   inline void set_timestamp_ms(::google::protobuf::int64 value);
 
-  // @@protoc_insertion_point(class_scope:io.elasticsearch.client.Metric)
+  // @@protoc_insertion_point(class_scope:io.metricslog.client.Metric)
  private:
   inline void set_has_gauge();
   inline void clear_has_gauge();
@@ -925,12 +925,12 @@ class Metric : public ::google::protobuf::Message {
 
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
-  ::google::protobuf::RepeatedPtrField< ::io::elasticsearch::client::LabelPair > label_;
-  ::io::elasticsearch::client::Gauge* gauge_;
-  ::io::elasticsearch::client::Counter* counter_;
-  ::io::elasticsearch::client::Summary* summary_;
-  ::io::elasticsearch::client::Untyped* untyped_;
-  ::io::elasticsearch::client::Histogram* histogram_;
+  ::google::protobuf::RepeatedPtrField< ::io::metricslog::client::LabelPair > label_;
+  ::io::metricslog::client::Gauge* gauge_;
+  ::io::metricslog::client::Counter* counter_;
+  ::io::metricslog::client::Summary* summary_;
+  ::io::metricslog::client::Untyped* untyped_;
+  ::io::metricslog::client::Histogram* histogram_;
   ::google::protobuf::int64 timestamp_ms_;
   friend void  protobuf_AddDesc_metrics_2eproto();
   friend void protobuf_AssignDesc_metrics_2eproto();
@@ -1018,26 +1018,26 @@ class MetricFamily : public ::google::protobuf::Message {
   inline ::std::string* release_help();
   inline void set_allocated_help(::std::string* help);
 
-  // optional .io.elasticsearch.client.MetricType type = 3;
+  // optional .io.metricslog.client.MetricType type = 3;
   inline bool has_type() const;
   inline void clear_type();
   static const int kTypeFieldNumber = 3;
-  inline ::io::elasticsearch::client::MetricType type() const;
-  inline void set_type(::io::elasticsearch::client::MetricType value);
+  inline ::io::metricslog::client::MetricType type() const;
+  inline void set_type(::io::metricslog::client::MetricType value);
 
-  // repeated .io.elasticsearch.client.Metric metric = 4;
+  // repeated .io.metricslog.client.Metric metric = 4;
   inline int metric_size() const;
   inline void clear_metric();
   static const int kMetricFieldNumber = 4;
-  inline const ::io::elasticsearch::client::Metric& metric(int index) const;
-  inline ::io::elasticsearch::client::Metric* mutable_metric(int index);
-  inline ::io::elasticsearch::client::Metric* add_metric();
-  inline const ::google::protobuf::RepeatedPtrField< ::io::elasticsearch::client::Metric >&
+  inline const ::io::metricslog::client::Metric& metric(int index) const;
+  inline ::io::metricslog::client::Metric* mutable_metric(int index);
+  inline ::io::metricslog::client::Metric* add_metric();
+  inline const ::google::protobuf::RepeatedPtrField< ::io::metricslog::client::Metric >&
       metric() const;
-  inline ::google::protobuf::RepeatedPtrField< ::io::elasticsearch::client::Metric >*
+  inline ::google::protobuf::RepeatedPtrField< ::io::metricslog::client::Metric >*
       mutable_metric();
 
-  // @@protoc_insertion_point(class_scope:io.elasticsearch.client.MetricFamily)
+  // @@protoc_insertion_point(class_scope:io.metricslog.client.MetricFamily)
  private:
   inline void set_has_name();
   inline void clear_has_name();
@@ -1052,7 +1052,7 @@ class MetricFamily : public ::google::protobuf::Message {
   mutable int _cached_size_;
   ::std::string* name_;
   ::std::string* help_;
-  ::google::protobuf::RepeatedPtrField< ::io::elasticsearch::client::Metric > metric_;
+  ::google::protobuf::RepeatedPtrField< ::io::metricslog::client::Metric > metric_;
   int type_;
   friend void  protobuf_AddDesc_metrics_2eproto();
   friend void protobuf_AssignDesc_metrics_2eproto();
@@ -1085,7 +1085,7 @@ inline void LabelPair::clear_name() {
   clear_has_name();
 }
 inline const ::std::string& LabelPair::name() const {
-  // @@protoc_insertion_point(field_get:io.elasticsearch.client.LabelPair.name)
+  // @@protoc_insertion_point(field_get:io.metricslog.client.LabelPair.name)
   return *name_;
 }
 inline void LabelPair::set_name(const ::std::string& value) {
@@ -1094,7 +1094,7 @@ inline void LabelPair::set_name(const ::std::string& value) {
     name_ = new ::std::string;
   }
   name_->assign(value);
-  // @@protoc_insertion_point(field_set:io.elasticsearch.client.LabelPair.name)
+  // @@protoc_insertion_point(field_set:io.metricslog.client.LabelPair.name)
 }
 inline void LabelPair::set_name(const char* value) {
   set_has_name();
@@ -1102,7 +1102,7 @@ inline void LabelPair::set_name(const char* value) {
     name_ = new ::std::string;
   }
   name_->assign(value);
-  // @@protoc_insertion_point(field_set_char:io.elasticsearch.client.LabelPair.name)
+  // @@protoc_insertion_point(field_set_char:io.metricslog.client.LabelPair.name)
 }
 inline void LabelPair::set_name(const char* value, size_t size) {
   set_has_name();
@@ -1110,14 +1110,14 @@ inline void LabelPair::set_name(const char* value, size_t size) {
     name_ = new ::std::string;
   }
   name_->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:io.elasticsearch.client.LabelPair.name)
+  // @@protoc_insertion_point(field_set_pointer:io.metricslog.client.LabelPair.name)
 }
 inline ::std::string* LabelPair::mutable_name() {
   set_has_name();
   if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     name_ = new ::std::string;
   }
-  // @@protoc_insertion_point(field_mutable:io.elasticsearch.client.LabelPair.name)
+  // @@protoc_insertion_point(field_mutable:io.metricslog.client.LabelPair.name)
   return name_;
 }
 inline ::std::string* LabelPair::release_name() {
@@ -1141,7 +1141,7 @@ inline void LabelPair::set_allocated_name(::std::string* name) {
     clear_has_name();
     name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   }
-  // @@protoc_insertion_point(field_set_allocated:io.elasticsearch.client.LabelPair.name)
+  // @@protoc_insertion_point(field_set_allocated:io.metricslog.client.LabelPair.name)
 }
 
 // optional string value = 2;
@@ -1161,7 +1161,7 @@ inline void LabelPair::clear_value() {
   clear_has_value();
 }
 inline const ::std::string& LabelPair::value() const {
-  // @@protoc_insertion_point(field_get:io.elasticsearch.client.LabelPair.value)
+  // @@protoc_insertion_point(field_get:io.metricslog.client.LabelPair.value)
   return *value_;
 }
 inline void LabelPair::set_value(const ::std::string& value) {
@@ -1170,7 +1170,7 @@ inline void LabelPair::set_value(const ::std::string& value) {
     value_ = new ::std::string;
   }
   value_->assign(value);
-  // @@protoc_insertion_point(field_set:io.elasticsearch.client.LabelPair.value)
+  // @@protoc_insertion_point(field_set:io.metricslog.client.LabelPair.value)
 }
 inline void LabelPair::set_value(const char* value) {
   set_has_value();
@@ -1178,7 +1178,7 @@ inline void LabelPair::set_value(const char* value) {
     value_ = new ::std::string;
   }
   value_->assign(value);
-  // @@protoc_insertion_point(field_set_char:io.elasticsearch.client.LabelPair.value)
+  // @@protoc_insertion_point(field_set_char:io.metricslog.client.LabelPair.value)
 }
 inline void LabelPair::set_value(const char* value, size_t size) {
   set_has_value();
@@ -1186,14 +1186,14 @@ inline void LabelPair::set_value(const char* value, size_t size) {
     value_ = new ::std::string;
   }
   value_->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:io.elasticsearch.client.LabelPair.value)
+  // @@protoc_insertion_point(field_set_pointer:io.metricslog.client.LabelPair.value)
 }
 inline ::std::string* LabelPair::mutable_value() {
   set_has_value();
   if (value_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     value_ = new ::std::string;
   }
-  // @@protoc_insertion_point(field_mutable:io.elasticsearch.client.LabelPair.value)
+  // @@protoc_insertion_point(field_mutable:io.metricslog.client.LabelPair.value)
   return value_;
 }
 inline ::std::string* LabelPair::release_value() {
@@ -1217,7 +1217,7 @@ inline void LabelPair::set_allocated_value(::std::string* value) {
     clear_has_value();
     value_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   }
-  // @@protoc_insertion_point(field_set_allocated:io.elasticsearch.client.LabelPair.value)
+  // @@protoc_insertion_point(field_set_allocated:io.metricslog.client.LabelPair.value)
 }
 
 // -------------------------------------------------------------------
@@ -1239,13 +1239,13 @@ inline void Gauge::clear_value() {
   clear_has_value();
 }
 inline double Gauge::value() const {
-  // @@protoc_insertion_point(field_get:io.elasticsearch.client.Gauge.value)
+  // @@protoc_insertion_point(field_get:io.metricslog.client.Gauge.value)
   return value_;
 }
 inline void Gauge::set_value(double value) {
   set_has_value();
   value_ = value;
-  // @@protoc_insertion_point(field_set:io.elasticsearch.client.Gauge.value)
+  // @@protoc_insertion_point(field_set:io.metricslog.client.Gauge.value)
 }
 
 // -------------------------------------------------------------------
@@ -1267,13 +1267,13 @@ inline void Counter::clear_value() {
   clear_has_value();
 }
 inline double Counter::value() const {
-  // @@protoc_insertion_point(field_get:io.elasticsearch.client.Counter.value)
+  // @@protoc_insertion_point(field_get:io.metricslog.client.Counter.value)
   return value_;
 }
 inline void Counter::set_value(double value) {
   set_has_value();
   value_ = value;
-  // @@protoc_insertion_point(field_set:io.elasticsearch.client.Counter.value)
+  // @@protoc_insertion_point(field_set:io.metricslog.client.Counter.value)
 }
 
 // -------------------------------------------------------------------
@@ -1295,13 +1295,13 @@ inline void Quantile::clear_quantile() {
   clear_has_quantile();
 }
 inline double Quantile::quantile() const {
-  // @@protoc_insertion_point(field_get:io.elasticsearch.client.Quantile.quantile)
+  // @@protoc_insertion_point(field_get:io.metricslog.client.Quantile.quantile)
   return quantile_;
 }
 inline void Quantile::set_quantile(double value) {
   set_has_quantile();
   quantile_ = value;
-  // @@protoc_insertion_point(field_set:io.elasticsearch.client.Quantile.quantile)
+  // @@protoc_insertion_point(field_set:io.metricslog.client.Quantile.quantile)
 }
 
 // optional double value = 2;
@@ -1319,13 +1319,13 @@ inline void Quantile::clear_value() {
   clear_has_value();
 }
 inline double Quantile::value() const {
-  // @@protoc_insertion_point(field_get:io.elasticsearch.client.Quantile.value)
+  // @@protoc_insertion_point(field_get:io.metricslog.client.Quantile.value)
   return value_;
 }
 inline void Quantile::set_value(double value) {
   set_has_value();
   value_ = value;
-  // @@protoc_insertion_point(field_set:io.elasticsearch.client.Quantile.value)
+  // @@protoc_insertion_point(field_set:io.metricslog.client.Quantile.value)
 }
 
 // -------------------------------------------------------------------
@@ -1347,13 +1347,13 @@ inline void Summary::clear_sample_count() {
   clear_has_sample_count();
 }
 inline ::google::protobuf::uint64 Summary::sample_count() const {
-  // @@protoc_insertion_point(field_get:io.elasticsearch.client.Summary.sample_count)
+  // @@protoc_insertion_point(field_get:io.metricslog.client.Summary.sample_count)
   return sample_count_;
 }
 inline void Summary::set_sample_count(::google::protobuf::uint64 value) {
   set_has_sample_count();
   sample_count_ = value;
-  // @@protoc_insertion_point(field_set:io.elasticsearch.client.Summary.sample_count)
+  // @@protoc_insertion_point(field_set:io.metricslog.client.Summary.sample_count)
 }
 
 // optional double sample_sum = 2;
@@ -1371,42 +1371,42 @@ inline void Summary::clear_sample_sum() {
   clear_has_sample_sum();
 }
 inline double Summary::sample_sum() const {
-  // @@protoc_insertion_point(field_get:io.elasticsearch.client.Summary.sample_sum)
+  // @@protoc_insertion_point(field_get:io.metricslog.client.Summary.sample_sum)
   return sample_sum_;
 }
 inline void Summary::set_sample_sum(double value) {
   set_has_sample_sum();
   sample_sum_ = value;
-  // @@protoc_insertion_point(field_set:io.elasticsearch.client.Summary.sample_sum)
+  // @@protoc_insertion_point(field_set:io.metricslog.client.Summary.sample_sum)
 }
 
-// repeated .io.elasticsearch.client.Quantile quantile = 3;
+// repeated .io.metricslog.client.Quantile quantile = 3;
 inline int Summary::quantile_size() const {
   return quantile_.size();
 }
 inline void Summary::clear_quantile() {
   quantile_.Clear();
 }
-inline const ::io::elasticsearch::client::Quantile& Summary::quantile(int index) const {
-  // @@protoc_insertion_point(field_get:io.elasticsearch.client.Summary.quantile)
+inline const ::io::metricslog::client::Quantile& Summary::quantile(int index) const {
+  // @@protoc_insertion_point(field_get:io.metricslog.client.Summary.quantile)
   return quantile_.Get(index);
 }
-inline ::io::elasticsearch::client::Quantile* Summary::mutable_quantile(int index) {
-  // @@protoc_insertion_point(field_mutable:io.elasticsearch.client.Summary.quantile)
+inline ::io::metricslog::client::Quantile* Summary::mutable_quantile(int index) {
+  // @@protoc_insertion_point(field_mutable:io.metricslog.client.Summary.quantile)
   return quantile_.Mutable(index);
 }
-inline ::io::elasticsearch::client::Quantile* Summary::add_quantile() {
-  // @@protoc_insertion_point(field_add:io.elasticsearch.client.Summary.quantile)
+inline ::io::metricslog::client::Quantile* Summary::add_quantile() {
+  // @@protoc_insertion_point(field_add:io.metricslog.client.Summary.quantile)
   return quantile_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::io::elasticsearch::client::Quantile >&
+inline const ::google::protobuf::RepeatedPtrField< ::io::metricslog::client::Quantile >&
 Summary::quantile() const {
-  // @@protoc_insertion_point(field_list:io.elasticsearch.client.Summary.quantile)
+  // @@protoc_insertion_point(field_list:io.metricslog.client.Summary.quantile)
   return quantile_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::io::elasticsearch::client::Quantile >*
+inline ::google::protobuf::RepeatedPtrField< ::io::metricslog::client::Quantile >*
 Summary::mutable_quantile() {
-  // @@protoc_insertion_point(field_mutable_list:io.elasticsearch.client.Summary.quantile)
+  // @@protoc_insertion_point(field_mutable_list:io.metricslog.client.Summary.quantile)
   return &quantile_;
 }
 
@@ -1429,13 +1429,13 @@ inline void Untyped::clear_value() {
   clear_has_value();
 }
 inline double Untyped::value() const {
-  // @@protoc_insertion_point(field_get:io.elasticsearch.client.Untyped.value)
+  // @@protoc_insertion_point(field_get:io.metricslog.client.Untyped.value)
   return value_;
 }
 inline void Untyped::set_value(double value) {
   set_has_value();
   value_ = value;
-  // @@protoc_insertion_point(field_set:io.elasticsearch.client.Untyped.value)
+  // @@protoc_insertion_point(field_set:io.metricslog.client.Untyped.value)
 }
 
 // -------------------------------------------------------------------
@@ -1457,13 +1457,13 @@ inline void Histogram::clear_sample_count() {
   clear_has_sample_count();
 }
 inline ::google::protobuf::uint64 Histogram::sample_count() const {
-  // @@protoc_insertion_point(field_get:io.elasticsearch.client.Histogram.sample_count)
+  // @@protoc_insertion_point(field_get:io.metricslog.client.Histogram.sample_count)
   return sample_count_;
 }
 inline void Histogram::set_sample_count(::google::protobuf::uint64 value) {
   set_has_sample_count();
   sample_count_ = value;
-  // @@protoc_insertion_point(field_set:io.elasticsearch.client.Histogram.sample_count)
+  // @@protoc_insertion_point(field_set:io.metricslog.client.Histogram.sample_count)
 }
 
 // optional double sample_sum = 2;
@@ -1481,42 +1481,42 @@ inline void Histogram::clear_sample_sum() {
   clear_has_sample_sum();
 }
 inline double Histogram::sample_sum() const {
-  // @@protoc_insertion_point(field_get:io.elasticsearch.client.Histogram.sample_sum)
+  // @@protoc_insertion_point(field_get:io.metricslog.client.Histogram.sample_sum)
   return sample_sum_;
 }
 inline void Histogram::set_sample_sum(double value) {
   set_has_sample_sum();
   sample_sum_ = value;
-  // @@protoc_insertion_point(field_set:io.elasticsearch.client.Histogram.sample_sum)
+  // @@protoc_insertion_point(field_set:io.metricslog.client.Histogram.sample_sum)
 }
 
-// repeated .io.elasticsearch.client.Bucket bucket = 3;
+// repeated .io.metricslog.client.Bucket bucket = 3;
 inline int Histogram::bucket_size() const {
   return bucket_.size();
 }
 inline void Histogram::clear_bucket() {
   bucket_.Clear();
 }
-inline const ::io::elasticsearch::client::Bucket& Histogram::bucket(int index) const {
-  // @@protoc_insertion_point(field_get:io.elasticsearch.client.Histogram.bucket)
+inline const ::io::metricslog::client::Bucket& Histogram::bucket(int index) const {
+  // @@protoc_insertion_point(field_get:io.metricslog.client.Histogram.bucket)
   return bucket_.Get(index);
 }
-inline ::io::elasticsearch::client::Bucket* Histogram::mutable_bucket(int index) {
-  // @@protoc_insertion_point(field_mutable:io.elasticsearch.client.Histogram.bucket)
+inline ::io::metricslog::client::Bucket* Histogram::mutable_bucket(int index) {
+  // @@protoc_insertion_point(field_mutable:io.metricslog.client.Histogram.bucket)
   return bucket_.Mutable(index);
 }
-inline ::io::elasticsearch::client::Bucket* Histogram::add_bucket() {
-  // @@protoc_insertion_point(field_add:io.elasticsearch.client.Histogram.bucket)
+inline ::io::metricslog::client::Bucket* Histogram::add_bucket() {
+  // @@protoc_insertion_point(field_add:io.metricslog.client.Histogram.bucket)
   return bucket_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::io::elasticsearch::client::Bucket >&
+inline const ::google::protobuf::RepeatedPtrField< ::io::metricslog::client::Bucket >&
 Histogram::bucket() const {
-  // @@protoc_insertion_point(field_list:io.elasticsearch.client.Histogram.bucket)
+  // @@protoc_insertion_point(field_list:io.metricslog.client.Histogram.bucket)
   return bucket_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::io::elasticsearch::client::Bucket >*
+inline ::google::protobuf::RepeatedPtrField< ::io::metricslog::client::Bucket >*
 Histogram::mutable_bucket() {
-  // @@protoc_insertion_point(field_mutable_list:io.elasticsearch.client.Histogram.bucket)
+  // @@protoc_insertion_point(field_mutable_list:io.metricslog.client.Histogram.bucket)
   return &bucket_;
 }
 
@@ -1539,13 +1539,13 @@ inline void Bucket::clear_cumulative_count() {
   clear_has_cumulative_count();
 }
 inline ::google::protobuf::uint64 Bucket::cumulative_count() const {
-  // @@protoc_insertion_point(field_get:io.elasticsearch.client.Bucket.cumulative_count)
+  // @@protoc_insertion_point(field_get:io.metricslog.client.Bucket.cumulative_count)
   return cumulative_count_;
 }
 inline void Bucket::set_cumulative_count(::google::protobuf::uint64 value) {
   set_has_cumulative_count();
   cumulative_count_ = value;
-  // @@protoc_insertion_point(field_set:io.elasticsearch.client.Bucket.cumulative_count)
+  // @@protoc_insertion_point(field_set:io.metricslog.client.Bucket.cumulative_count)
 }
 
 // optional double upper_bound = 2;
@@ -1563,50 +1563,50 @@ inline void Bucket::clear_upper_bound() {
   clear_has_upper_bound();
 }
 inline double Bucket::upper_bound() const {
-  // @@protoc_insertion_point(field_get:io.elasticsearch.client.Bucket.upper_bound)
+  // @@protoc_insertion_point(field_get:io.metricslog.client.Bucket.upper_bound)
   return upper_bound_;
 }
 inline void Bucket::set_upper_bound(double value) {
   set_has_upper_bound();
   upper_bound_ = value;
-  // @@protoc_insertion_point(field_set:io.elasticsearch.client.Bucket.upper_bound)
+  // @@protoc_insertion_point(field_set:io.metricslog.client.Bucket.upper_bound)
 }
 
 // -------------------------------------------------------------------
 
 // Metric
 
-// repeated .io.elasticsearch.client.LabelPair label = 1;
+// repeated .io.metricslog.client.LabelPair label = 1;
 inline int Metric::label_size() const {
   return label_.size();
 }
 inline void Metric::clear_label() {
   label_.Clear();
 }
-inline const ::io::elasticsearch::client::LabelPair& Metric::label(int index) const {
-  // @@protoc_insertion_point(field_get:io.elasticsearch.client.Metric.label)
+inline const ::io::metricslog::client::LabelPair& Metric::label(int index) const {
+  // @@protoc_insertion_point(field_get:io.metricslog.client.Metric.label)
   return label_.Get(index);
 }
-inline ::io::elasticsearch::client::LabelPair* Metric::mutable_label(int index) {
-  // @@protoc_insertion_point(field_mutable:io.elasticsearch.client.Metric.label)
+inline ::io::metricslog::client::LabelPair* Metric::mutable_label(int index) {
+  // @@protoc_insertion_point(field_mutable:io.metricslog.client.Metric.label)
   return label_.Mutable(index);
 }
-inline ::io::elasticsearch::client::LabelPair* Metric::add_label() {
-  // @@protoc_insertion_point(field_add:io.elasticsearch.client.Metric.label)
+inline ::io::metricslog::client::LabelPair* Metric::add_label() {
+  // @@protoc_insertion_point(field_add:io.metricslog.client.Metric.label)
   return label_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::io::elasticsearch::client::LabelPair >&
+inline const ::google::protobuf::RepeatedPtrField< ::io::metricslog::client::LabelPair >&
 Metric::label() const {
-  // @@protoc_insertion_point(field_list:io.elasticsearch.client.Metric.label)
+  // @@protoc_insertion_point(field_list:io.metricslog.client.Metric.label)
   return label_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::io::elasticsearch::client::LabelPair >*
+inline ::google::protobuf::RepeatedPtrField< ::io::metricslog::client::LabelPair >*
 Metric::mutable_label() {
-  // @@protoc_insertion_point(field_mutable_list:io.elasticsearch.client.Metric.label)
+  // @@protoc_insertion_point(field_mutable_list:io.metricslog.client.Metric.label)
   return &label_;
 }
 
-// optional .io.elasticsearch.client.Gauge gauge = 2;
+// optional .io.metricslog.client.Gauge gauge = 2;
 inline bool Metric::has_gauge() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -1617,26 +1617,26 @@ inline void Metric::clear_has_gauge() {
   _has_bits_[0] &= ~0x00000002u;
 }
 inline void Metric::clear_gauge() {
-  if (gauge_ != NULL) gauge_->::io::elasticsearch::client::Gauge::Clear();
+  if (gauge_ != NULL) gauge_->::io::metricslog::client::Gauge::Clear();
   clear_has_gauge();
 }
-inline const ::io::elasticsearch::client::Gauge& Metric::gauge() const {
-  // @@protoc_insertion_point(field_get:io.elasticsearch.client.Metric.gauge)
+inline const ::io::metricslog::client::Gauge& Metric::gauge() const {
+  // @@protoc_insertion_point(field_get:io.metricslog.client.Metric.gauge)
   return gauge_ != NULL ? *gauge_ : *default_instance_->gauge_;
 }
-inline ::io::elasticsearch::client::Gauge* Metric::mutable_gauge() {
+inline ::io::metricslog::client::Gauge* Metric::mutable_gauge() {
   set_has_gauge();
-  if (gauge_ == NULL) gauge_ = new ::io::elasticsearch::client::Gauge;
-  // @@protoc_insertion_point(field_mutable:io.elasticsearch.client.Metric.gauge)
+  if (gauge_ == NULL) gauge_ = new ::io::metricslog::client::Gauge;
+  // @@protoc_insertion_point(field_mutable:io.metricslog.client.Metric.gauge)
   return gauge_;
 }
-inline ::io::elasticsearch::client::Gauge* Metric::release_gauge() {
+inline ::io::metricslog::client::Gauge* Metric::release_gauge() {
   clear_has_gauge();
-  ::io::elasticsearch::client::Gauge* temp = gauge_;
+  ::io::metricslog::client::Gauge* temp = gauge_;
   gauge_ = NULL;
   return temp;
 }
-inline void Metric::set_allocated_gauge(::io::elasticsearch::client::Gauge* gauge) {
+inline void Metric::set_allocated_gauge(::io::metricslog::client::Gauge* gauge) {
   delete gauge_;
   gauge_ = gauge;
   if (gauge) {
@@ -1644,10 +1644,10 @@ inline void Metric::set_allocated_gauge(::io::elasticsearch::client::Gauge* gaug
   } else {
     clear_has_gauge();
   }
-  // @@protoc_insertion_point(field_set_allocated:io.elasticsearch.client.Metric.gauge)
+  // @@protoc_insertion_point(field_set_allocated:io.metricslog.client.Metric.gauge)
 }
 
-// optional .io.elasticsearch.client.Counter counter = 3;
+// optional .io.metricslog.client.Counter counter = 3;
 inline bool Metric::has_counter() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
@@ -1658,26 +1658,26 @@ inline void Metric::clear_has_counter() {
   _has_bits_[0] &= ~0x00000004u;
 }
 inline void Metric::clear_counter() {
-  if (counter_ != NULL) counter_->::io::elasticsearch::client::Counter::Clear();
+  if (counter_ != NULL) counter_->::io::metricslog::client::Counter::Clear();
   clear_has_counter();
 }
-inline const ::io::elasticsearch::client::Counter& Metric::counter() const {
-  // @@protoc_insertion_point(field_get:io.elasticsearch.client.Metric.counter)
+inline const ::io::metricslog::client::Counter& Metric::counter() const {
+  // @@protoc_insertion_point(field_get:io.metricslog.client.Metric.counter)
   return counter_ != NULL ? *counter_ : *default_instance_->counter_;
 }
-inline ::io::elasticsearch::client::Counter* Metric::mutable_counter() {
+inline ::io::metricslog::client::Counter* Metric::mutable_counter() {
   set_has_counter();
-  if (counter_ == NULL) counter_ = new ::io::elasticsearch::client::Counter;
-  // @@protoc_insertion_point(field_mutable:io.elasticsearch.client.Metric.counter)
+  if (counter_ == NULL) counter_ = new ::io::metricslog::client::Counter;
+  // @@protoc_insertion_point(field_mutable:io.metricslog.client.Metric.counter)
   return counter_;
 }
-inline ::io::elasticsearch::client::Counter* Metric::release_counter() {
+inline ::io::metricslog::client::Counter* Metric::release_counter() {
   clear_has_counter();
-  ::io::elasticsearch::client::Counter* temp = counter_;
+  ::io::metricslog::client::Counter* temp = counter_;
   counter_ = NULL;
   return temp;
 }
-inline void Metric::set_allocated_counter(::io::elasticsearch::client::Counter* counter) {
+inline void Metric::set_allocated_counter(::io::metricslog::client::Counter* counter) {
   delete counter_;
   counter_ = counter;
   if (counter) {
@@ -1685,10 +1685,10 @@ inline void Metric::set_allocated_counter(::io::elasticsearch::client::Counter* 
   } else {
     clear_has_counter();
   }
-  // @@protoc_insertion_point(field_set_allocated:io.elasticsearch.client.Metric.counter)
+  // @@protoc_insertion_point(field_set_allocated:io.metricslog.client.Metric.counter)
 }
 
-// optional .io.elasticsearch.client.Summary summary = 4;
+// optional .io.metricslog.client.Summary summary = 4;
 inline bool Metric::has_summary() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
@@ -1699,26 +1699,26 @@ inline void Metric::clear_has_summary() {
   _has_bits_[0] &= ~0x00000008u;
 }
 inline void Metric::clear_summary() {
-  if (summary_ != NULL) summary_->::io::elasticsearch::client::Summary::Clear();
+  if (summary_ != NULL) summary_->::io::metricslog::client::Summary::Clear();
   clear_has_summary();
 }
-inline const ::io::elasticsearch::client::Summary& Metric::summary() const {
-  // @@protoc_insertion_point(field_get:io.elasticsearch.client.Metric.summary)
+inline const ::io::metricslog::client::Summary& Metric::summary() const {
+  // @@protoc_insertion_point(field_get:io.metricslog.client.Metric.summary)
   return summary_ != NULL ? *summary_ : *default_instance_->summary_;
 }
-inline ::io::elasticsearch::client::Summary* Metric::mutable_summary() {
+inline ::io::metricslog::client::Summary* Metric::mutable_summary() {
   set_has_summary();
-  if (summary_ == NULL) summary_ = new ::io::elasticsearch::client::Summary;
-  // @@protoc_insertion_point(field_mutable:io.elasticsearch.client.Metric.summary)
+  if (summary_ == NULL) summary_ = new ::io::metricslog::client::Summary;
+  // @@protoc_insertion_point(field_mutable:io.metricslog.client.Metric.summary)
   return summary_;
 }
-inline ::io::elasticsearch::client::Summary* Metric::release_summary() {
+inline ::io::metricslog::client::Summary* Metric::release_summary() {
   clear_has_summary();
-  ::io::elasticsearch::client::Summary* temp = summary_;
+  ::io::metricslog::client::Summary* temp = summary_;
   summary_ = NULL;
   return temp;
 }
-inline void Metric::set_allocated_summary(::io::elasticsearch::client::Summary* summary) {
+inline void Metric::set_allocated_summary(::io::metricslog::client::Summary* summary) {
   delete summary_;
   summary_ = summary;
   if (summary) {
@@ -1726,10 +1726,10 @@ inline void Metric::set_allocated_summary(::io::elasticsearch::client::Summary* 
   } else {
     clear_has_summary();
   }
-  // @@protoc_insertion_point(field_set_allocated:io.elasticsearch.client.Metric.summary)
+  // @@protoc_insertion_point(field_set_allocated:io.metricslog.client.Metric.summary)
 }
 
-// optional .io.elasticsearch.client.Untyped untyped = 5;
+// optional .io.metricslog.client.Untyped untyped = 5;
 inline bool Metric::has_untyped() const {
   return (_has_bits_[0] & 0x00000010u) != 0;
 }
@@ -1740,26 +1740,26 @@ inline void Metric::clear_has_untyped() {
   _has_bits_[0] &= ~0x00000010u;
 }
 inline void Metric::clear_untyped() {
-  if (untyped_ != NULL) untyped_->::io::elasticsearch::client::Untyped::Clear();
+  if (untyped_ != NULL) untyped_->::io::metricslog::client::Untyped::Clear();
   clear_has_untyped();
 }
-inline const ::io::elasticsearch::client::Untyped& Metric::untyped() const {
-  // @@protoc_insertion_point(field_get:io.elasticsearch.client.Metric.untyped)
+inline const ::io::metricslog::client::Untyped& Metric::untyped() const {
+  // @@protoc_insertion_point(field_get:io.metricslog.client.Metric.untyped)
   return untyped_ != NULL ? *untyped_ : *default_instance_->untyped_;
 }
-inline ::io::elasticsearch::client::Untyped* Metric::mutable_untyped() {
+inline ::io::metricslog::client::Untyped* Metric::mutable_untyped() {
   set_has_untyped();
-  if (untyped_ == NULL) untyped_ = new ::io::elasticsearch::client::Untyped;
-  // @@protoc_insertion_point(field_mutable:io.elasticsearch.client.Metric.untyped)
+  if (untyped_ == NULL) untyped_ = new ::io::metricslog::client::Untyped;
+  // @@protoc_insertion_point(field_mutable:io.metricslog.client.Metric.untyped)
   return untyped_;
 }
-inline ::io::elasticsearch::client::Untyped* Metric::release_untyped() {
+inline ::io::metricslog::client::Untyped* Metric::release_untyped() {
   clear_has_untyped();
-  ::io::elasticsearch::client::Untyped* temp = untyped_;
+  ::io::metricslog::client::Untyped* temp = untyped_;
   untyped_ = NULL;
   return temp;
 }
-inline void Metric::set_allocated_untyped(::io::elasticsearch::client::Untyped* untyped) {
+inline void Metric::set_allocated_untyped(::io::metricslog::client::Untyped* untyped) {
   delete untyped_;
   untyped_ = untyped;
   if (untyped) {
@@ -1767,10 +1767,10 @@ inline void Metric::set_allocated_untyped(::io::elasticsearch::client::Untyped* 
   } else {
     clear_has_untyped();
   }
-  // @@protoc_insertion_point(field_set_allocated:io.elasticsearch.client.Metric.untyped)
+  // @@protoc_insertion_point(field_set_allocated:io.metricslog.client.Metric.untyped)
 }
 
-// optional .io.elasticsearch.client.Histogram histogram = 7;
+// optional .io.metricslog.client.Histogram histogram = 7;
 inline bool Metric::has_histogram() const {
   return (_has_bits_[0] & 0x00000020u) != 0;
 }
@@ -1781,26 +1781,26 @@ inline void Metric::clear_has_histogram() {
   _has_bits_[0] &= ~0x00000020u;
 }
 inline void Metric::clear_histogram() {
-  if (histogram_ != NULL) histogram_->::io::elasticsearch::client::Histogram::Clear();
+  if (histogram_ != NULL) histogram_->::io::metricslog::client::Histogram::Clear();
   clear_has_histogram();
 }
-inline const ::io::elasticsearch::client::Histogram& Metric::histogram() const {
-  // @@protoc_insertion_point(field_get:io.elasticsearch.client.Metric.histogram)
+inline const ::io::metricslog::client::Histogram& Metric::histogram() const {
+  // @@protoc_insertion_point(field_get:io.metricslog.client.Metric.histogram)
   return histogram_ != NULL ? *histogram_ : *default_instance_->histogram_;
 }
-inline ::io::elasticsearch::client::Histogram* Metric::mutable_histogram() {
+inline ::io::metricslog::client::Histogram* Metric::mutable_histogram() {
   set_has_histogram();
-  if (histogram_ == NULL) histogram_ = new ::io::elasticsearch::client::Histogram;
-  // @@protoc_insertion_point(field_mutable:io.elasticsearch.client.Metric.histogram)
+  if (histogram_ == NULL) histogram_ = new ::io::metricslog::client::Histogram;
+  // @@protoc_insertion_point(field_mutable:io.metricslog.client.Metric.histogram)
   return histogram_;
 }
-inline ::io::elasticsearch::client::Histogram* Metric::release_histogram() {
+inline ::io::metricslog::client::Histogram* Metric::release_histogram() {
   clear_has_histogram();
-  ::io::elasticsearch::client::Histogram* temp = histogram_;
+  ::io::metricslog::client::Histogram* temp = histogram_;
   histogram_ = NULL;
   return temp;
 }
-inline void Metric::set_allocated_histogram(::io::elasticsearch::client::Histogram* histogram) {
+inline void Metric::set_allocated_histogram(::io::metricslog::client::Histogram* histogram) {
   delete histogram_;
   histogram_ = histogram;
   if (histogram) {
@@ -1808,7 +1808,7 @@ inline void Metric::set_allocated_histogram(::io::elasticsearch::client::Histogr
   } else {
     clear_has_histogram();
   }
-  // @@protoc_insertion_point(field_set_allocated:io.elasticsearch.client.Metric.histogram)
+  // @@protoc_insertion_point(field_set_allocated:io.metricslog.client.Metric.histogram)
 }
 
 // optional int64 timestamp_ms = 6;
@@ -1826,13 +1826,13 @@ inline void Metric::clear_timestamp_ms() {
   clear_has_timestamp_ms();
 }
 inline ::google::protobuf::int64 Metric::timestamp_ms() const {
-  // @@protoc_insertion_point(field_get:io.elasticsearch.client.Metric.timestamp_ms)
+  // @@protoc_insertion_point(field_get:io.metricslog.client.Metric.timestamp_ms)
   return timestamp_ms_;
 }
 inline void Metric::set_timestamp_ms(::google::protobuf::int64 value) {
   set_has_timestamp_ms();
   timestamp_ms_ = value;
-  // @@protoc_insertion_point(field_set:io.elasticsearch.client.Metric.timestamp_ms)
+  // @@protoc_insertion_point(field_set:io.metricslog.client.Metric.timestamp_ms)
 }
 
 // -------------------------------------------------------------------
@@ -1856,7 +1856,7 @@ inline void MetricFamily::clear_name() {
   clear_has_name();
 }
 inline const ::std::string& MetricFamily::name() const {
-  // @@protoc_insertion_point(field_get:io.elasticsearch.client.MetricFamily.name)
+  // @@protoc_insertion_point(field_get:io.metricslog.client.MetricFamily.name)
   return *name_;
 }
 inline void MetricFamily::set_name(const ::std::string& value) {
@@ -1865,7 +1865,7 @@ inline void MetricFamily::set_name(const ::std::string& value) {
     name_ = new ::std::string;
   }
   name_->assign(value);
-  // @@protoc_insertion_point(field_set:io.elasticsearch.client.MetricFamily.name)
+  // @@protoc_insertion_point(field_set:io.metricslog.client.MetricFamily.name)
 }
 inline void MetricFamily::set_name(const char* value) {
   set_has_name();
@@ -1873,7 +1873,7 @@ inline void MetricFamily::set_name(const char* value) {
     name_ = new ::std::string;
   }
   name_->assign(value);
-  // @@protoc_insertion_point(field_set_char:io.elasticsearch.client.MetricFamily.name)
+  // @@protoc_insertion_point(field_set_char:io.metricslog.client.MetricFamily.name)
 }
 inline void MetricFamily::set_name(const char* value, size_t size) {
   set_has_name();
@@ -1881,14 +1881,14 @@ inline void MetricFamily::set_name(const char* value, size_t size) {
     name_ = new ::std::string;
   }
   name_->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:io.elasticsearch.client.MetricFamily.name)
+  // @@protoc_insertion_point(field_set_pointer:io.metricslog.client.MetricFamily.name)
 }
 inline ::std::string* MetricFamily::mutable_name() {
   set_has_name();
   if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     name_ = new ::std::string;
   }
-  // @@protoc_insertion_point(field_mutable:io.elasticsearch.client.MetricFamily.name)
+  // @@protoc_insertion_point(field_mutable:io.metricslog.client.MetricFamily.name)
   return name_;
 }
 inline ::std::string* MetricFamily::release_name() {
@@ -1912,7 +1912,7 @@ inline void MetricFamily::set_allocated_name(::std::string* name) {
     clear_has_name();
     name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   }
-  // @@protoc_insertion_point(field_set_allocated:io.elasticsearch.client.MetricFamily.name)
+  // @@protoc_insertion_point(field_set_allocated:io.metricslog.client.MetricFamily.name)
 }
 
 // optional string help = 2;
@@ -1932,7 +1932,7 @@ inline void MetricFamily::clear_help() {
   clear_has_help();
 }
 inline const ::std::string& MetricFamily::help() const {
-  // @@protoc_insertion_point(field_get:io.elasticsearch.client.MetricFamily.help)
+  // @@protoc_insertion_point(field_get:io.metricslog.client.MetricFamily.help)
   return *help_;
 }
 inline void MetricFamily::set_help(const ::std::string& value) {
@@ -1941,7 +1941,7 @@ inline void MetricFamily::set_help(const ::std::string& value) {
     help_ = new ::std::string;
   }
   help_->assign(value);
-  // @@protoc_insertion_point(field_set:io.elasticsearch.client.MetricFamily.help)
+  // @@protoc_insertion_point(field_set:io.metricslog.client.MetricFamily.help)
 }
 inline void MetricFamily::set_help(const char* value) {
   set_has_help();
@@ -1949,7 +1949,7 @@ inline void MetricFamily::set_help(const char* value) {
     help_ = new ::std::string;
   }
   help_->assign(value);
-  // @@protoc_insertion_point(field_set_char:io.elasticsearch.client.MetricFamily.help)
+  // @@protoc_insertion_point(field_set_char:io.metricslog.client.MetricFamily.help)
 }
 inline void MetricFamily::set_help(const char* value, size_t size) {
   set_has_help();
@@ -1957,14 +1957,14 @@ inline void MetricFamily::set_help(const char* value, size_t size) {
     help_ = new ::std::string;
   }
   help_->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:io.elasticsearch.client.MetricFamily.help)
+  // @@protoc_insertion_point(field_set_pointer:io.metricslog.client.MetricFamily.help)
 }
 inline ::std::string* MetricFamily::mutable_help() {
   set_has_help();
   if (help_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     help_ = new ::std::string;
   }
-  // @@protoc_insertion_point(field_mutable:io.elasticsearch.client.MetricFamily.help)
+  // @@protoc_insertion_point(field_mutable:io.metricslog.client.MetricFamily.help)
   return help_;
 }
 inline ::std::string* MetricFamily::release_help() {
@@ -1988,10 +1988,10 @@ inline void MetricFamily::set_allocated_help(::std::string* help) {
     clear_has_help();
     help_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   }
-  // @@protoc_insertion_point(field_set_allocated:io.elasticsearch.client.MetricFamily.help)
+  // @@protoc_insertion_point(field_set_allocated:io.metricslog.client.MetricFamily.help)
 }
 
-// optional .io.elasticsearch.client.MetricType type = 3;
+// optional .io.metricslog.client.MetricType type = 3;
 inline bool MetricFamily::has_type() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
@@ -2005,44 +2005,44 @@ inline void MetricFamily::clear_type() {
   type_ = 0;
   clear_has_type();
 }
-inline ::io::elasticsearch::client::MetricType MetricFamily::type() const {
-  // @@protoc_insertion_point(field_get:io.elasticsearch.client.MetricFamily.type)
-  return static_cast< ::io::elasticsearch::client::MetricType >(type_);
+inline ::io::metricslog::client::MetricType MetricFamily::type() const {
+  // @@protoc_insertion_point(field_get:io.metricslog.client.MetricFamily.type)
+  return static_cast< ::io::metricslog::client::MetricType >(type_);
 }
-inline void MetricFamily::set_type(::io::elasticsearch::client::MetricType value) {
-  assert(::io::elasticsearch::client::MetricType_IsValid(value));
+inline void MetricFamily::set_type(::io::metricslog::client::MetricType value) {
+  assert(::io::metricslog::client::MetricType_IsValid(value));
   set_has_type();
   type_ = value;
-  // @@protoc_insertion_point(field_set:io.elasticsearch.client.MetricFamily.type)
+  // @@protoc_insertion_point(field_set:io.metricslog.client.MetricFamily.type)
 }
 
-// repeated .io.elasticsearch.client.Metric metric = 4;
+// repeated .io.metricslog.client.Metric metric = 4;
 inline int MetricFamily::metric_size() const {
   return metric_.size();
 }
 inline void MetricFamily::clear_metric() {
   metric_.Clear();
 }
-inline const ::io::elasticsearch::client::Metric& MetricFamily::metric(int index) const {
-  // @@protoc_insertion_point(field_get:io.elasticsearch.client.MetricFamily.metric)
+inline const ::io::metricslog::client::Metric& MetricFamily::metric(int index) const {
+  // @@protoc_insertion_point(field_get:io.metricslog.client.MetricFamily.metric)
   return metric_.Get(index);
 }
-inline ::io::elasticsearch::client::Metric* MetricFamily::mutable_metric(int index) {
-  // @@protoc_insertion_point(field_mutable:io.elasticsearch.client.MetricFamily.metric)
+inline ::io::metricslog::client::Metric* MetricFamily::mutable_metric(int index) {
+  // @@protoc_insertion_point(field_mutable:io.metricslog.client.MetricFamily.metric)
   return metric_.Mutable(index);
 }
-inline ::io::elasticsearch::client::Metric* MetricFamily::add_metric() {
-  // @@protoc_insertion_point(field_add:io.elasticsearch.client.MetricFamily.metric)
+inline ::io::metricslog::client::Metric* MetricFamily::add_metric() {
+  // @@protoc_insertion_point(field_add:io.metricslog.client.MetricFamily.metric)
   return metric_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::io::elasticsearch::client::Metric >&
+inline const ::google::protobuf::RepeatedPtrField< ::io::metricslog::client::Metric >&
 MetricFamily::metric() const {
-  // @@protoc_insertion_point(field_list:io.elasticsearch.client.MetricFamily.metric)
+  // @@protoc_insertion_point(field_list:io.metricslog.client.MetricFamily.metric)
   return metric_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::io::elasticsearch::client::Metric >*
+inline ::google::protobuf::RepeatedPtrField< ::io::metricslog::client::Metric >*
 MetricFamily::mutable_metric() {
-  // @@protoc_insertion_point(field_mutable_list:io.elasticsearch.client.MetricFamily.metric)
+  // @@protoc_insertion_point(field_mutable_list:io.metricslog.client.MetricFamily.metric)
   return &metric_;
 }
 
@@ -2050,17 +2050,17 @@ MetricFamily::mutable_metric() {
 // @@protoc_insertion_point(namespace_scope)
 
 }  // namespace client
-}  // namespace elasticsearch
+}  // namespace metricslog
 }  // namespace io
 
 #ifndef SWIG
 namespace google {
 namespace protobuf {
 
-template <> struct is_proto_enum< ::io::elasticsearch::client::MetricType> : ::google::protobuf::internal::true_type {};
+template <> struct is_proto_enum< ::io::metricslog::client::MetricType> : ::google::protobuf::internal::true_type {};
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::io::elasticsearch::client::MetricType>() {
-  return ::io::elasticsearch::client::MetricType_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor< ::io::metricslog::client::MetricType>() {
+  return ::io::metricslog::client::MetricType_descriptor();
 }
 
 }  // namespace google

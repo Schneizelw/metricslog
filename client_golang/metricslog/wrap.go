@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package elasticsearch
+package metricslog
 
 import (
     "fmt"
@@ -19,7 +19,7 @@ import (
 
     "github.com/golang/protobuf/proto"
 
-    dto "github.com/Schneizelw/elasticsearch/client_model/go"
+    dto "github.com/Schneizelw/metricslog/client_model/go"
 )
 
 // WrapRegistererWith returns a Registerer wrapping the provided

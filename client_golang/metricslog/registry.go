@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package elasticsearch
+package metricslog
 
 import (
     "bytes"
@@ -26,11 +26,11 @@ import (
     "unicode/utf8"
 
     "github.com/golang/protobuf/proto"
-    "github.com/Schneizelw/elasticsearch/common/expfmt"
+    "github.com/Schneizelw/metricslog/common/expfmt"
 
-    dto "github.com/Schneizelw/elasticsearch/client_model/go"
+    dto "github.com/Schneizelw/metricslog/client_model/go"
 
-    "github.com/Schneizelw/elasticsearch/client_golang/elasticsearch/internal"
+    "github.com/Schneizelw/metricslog/client_golang/metricslog/internal"
 )
 
 const (

@@ -20,9 +20,9 @@ import (
     "net/http/httptest"
     "testing"
 
-    "github.com/Schneizelw/elasticsearch/common/expfmt"
+    "github.com/Schneizelw/metricslog/common/expfmt"
 
-    "github.com/Schneizelw/elasticsearch/client_golang/elasticsearch"
+    "github.com/Schneizelw/metricslog/client_golang/metricslog"
 )
 
 func TestPush(t *testing.T) {
@@ -57,17 +57,17 @@ func TestPush(t *testing.T) {
     )
     defer pgwErr.Close()
 
-    metric1 := elasticsearch.NewCounter(elasticsearch.CounterOpts{
+    metric1 := metricslog.NewCounter(metricslog.CounterOpts{
         Name: "testname1",
         Help: "testhelp1",
     })
-    metric2 := elasticsearch.NewGauge(elasticsearch.GaugeOpts{
+    metric2 := metricslog.NewGauge(metricslog.GaugeOpts{
         Name:        "testname2",
         Help:        "testhelp2",
-        ConstLabels: elasticsearch.Labels{"foo": "bar", "dings": "bums"},
+        ConstLabels: metricslog.Labels{"foo": "bar", "dings": "bums"},
     })
 
-    reg := elasticsearch.NewRegistry()
+    reg := metricslog.NewRegistry()
     reg.MustRegister(metric1)
     reg.MustRegister(metric2)
 

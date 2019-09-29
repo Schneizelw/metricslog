@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package elasticsearch
+package metricslog
 
 // Observer is the interface that wraps the Observe method, which is used by
 // Histogram and Summary to add observations.

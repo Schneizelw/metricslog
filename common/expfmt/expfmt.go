@@ -21,7 +21,7 @@ type Format string
 const (
     TextVersion   = "0.0.4"
     ProtoType     = `application/vnd.google.protobuf`
-    ProtoProtocol = `io.elasticsearch.client.MetricFamily`
+    ProtoProtocol = `io.metricslog.client.MetricFamily`
     ProtoFmt      = ProtoType + "; proto=" + ProtoProtocol + ";"
 
     // The Content-Type values for the different wire protocols.

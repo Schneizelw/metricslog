@@ -14,9 +14,9 @@ delimited protobuf messages:
 
 ```ruby
 require 'open-uri'
-require 'elasticsearch/client/model'
+require 'metricslog/client/model'
 
-CONTENT_TYPE = 'application/vnd.google.protobuf; proto=io.elasticsearch.client.MetricFamily; encoding=delimited'
+CONTENT_TYPE = 'application/vnd.google.protobuf; proto=io.metricslog.client.MetricFamily; encoding=delimited'
 
 content = open('http://localhost:9100/metrics', 'Accept' => CONTENT_TYPE).read
 buffer = Beefcake::Buffer.new(content)
@@ -26,4 +26,4 @@ while family = Prometheus::Client::MetricFamily.read_delimited(buffer)
 end
 ```
 
-[1]: https://github.com/Schneizelw/elasticsearch/client_ruby
+[1]: https://github.com/Schneizelw/metricslog/client_ruby

@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package elasticsearch
+package metricslog
 
 import (
     "fmt"
@@ -24,8 +24,8 @@ import (
     "io/ioutil"
     "encoding/json"
     "github.com/cihub/seelog"
-    "github.com/Schneizelw/elasticsearch/common/model"
-    dto "github.com/Schneizelw/elasticsearch/client_model/go"
+    "github.com/Schneizelw/metricslog/common/model"
+    dto "github.com/Schneizelw/metricslog/client_model/go"
 )
 
 const (

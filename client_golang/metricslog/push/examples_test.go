@@ -16,12 +16,12 @@ package push_test
 import (
     "fmt"
 
-    "github.com/Schneizelw/elasticsearch/client_golang/elasticsearch"
-    "github.com/Schneizelw/elasticsearch/client_golang/elasticsearch/push"
+    "github.com/Schneizelw/metricslog/client_golang/metricslog"
+    "github.com/Schneizelw/metricslog/client_golang/metricslog/push"
 )
 
 func ExamplePusher_Push() {
-    completionTime := elasticsearch.NewGauge(elasticsearch.GaugeOpts{
+    completionTime := metricslog.NewGauge(metricslog.GaugeOpts{
         Name: "db_backup_last_completion_timestamp_seconds",
         Help: "The timestamp of the last successful completion of a DB backup.",
     })

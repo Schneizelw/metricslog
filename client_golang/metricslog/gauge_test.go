@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package elasticsearch
+package metricslog
 
 import (
     "math"
@@ -21,7 +21,7 @@ import (
     "testing/quick"
     "time"
 
-    dto "github.com/Schneizelw/elasticsearch/client_model/go"
+    dto "github.com/Schneizelw/metricslog/client_model/go"
 )
 
 func listenGaugeStream(vals, result chan float64, done chan struct{}) {

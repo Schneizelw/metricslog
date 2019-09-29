@@ -22,7 +22,7 @@ import (
 
     "github.com/matttproud/golang_protobuf_extensions/pbutil"
 
-    dto "github.com/Schneizelw/elasticsearch/client_model/go"
+    dto "github.com/Schneizelw/metricslog/client_model/go"
 )
 
 var parser TextParser

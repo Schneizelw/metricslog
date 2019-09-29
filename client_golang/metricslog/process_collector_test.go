@@ -13,7 +13,7 @@
 
 // +build linux
 
-package elasticsearch
+package metricslog
 
 import (
     "bytes"
@@ -22,10 +22,10 @@ import (
     "regexp"
     "testing"
 
-    "github.com/Schneizelw/elasticsearch/common/expfmt"
-    "github.com/Schneizelw/elasticsearch/procfs"
+    "github.com/Schneizelw/metricslog/common/expfmt"
+    "github.com/Schneizelw/metricslog/procfs"
 
-    dto "github.com/Schneizelw/elasticsearch/client_model/go"
+    dto "github.com/Schneizelw/metricslog/client_model/go"
 )
 
 func TestProcessCollector(t *testing.T) {

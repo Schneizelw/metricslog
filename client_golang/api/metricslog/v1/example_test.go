@@ -21,8 +21,8 @@ import (
     "os"
     "time"
 
-    "github.com/Schneizelw/elasticsearch/client_golang/api"
-    v1 "github.com/Schneizelw/elasticsearch/client_golang/api/elasticsearch/v1"
+    "github.com/Schneizelw/metricslog/client_golang/api"
+    v1 "github.com/Schneizelw/metricslog/client_golang/api/metricslog/v1"
 )
 
 func ExampleAPI_Query() {
@@ -65,7 +65,7 @@ func ExampleAPI_QueryRange() {
         End:   time.Now(),
         Step:  time.Minute,
     }
-    result, warnings, err := api.QueryRange(ctx, "rate(elasticsearch_tsdb_head_samples_appended_total[5m])", r)
+    result, warnings, err := api.QueryRange(ctx, "rate(metricslog_tsdb_head_samples_appended_total[5m])", r)
     if err != nil {
         fmt.Printf("Error querying Prometheus: %v\n", err)
         os.Exit(1)
@@ -90,7 +90,7 @@ func ExampleAPI_Series() {
     defer cancel()
     lbls, warnings, err := api.Series(ctx, []string{
         "{__name__=~\"scrape_.+\",job=\"node\"}",
-        "{__name__=~\"scrape_.+\",job=\"elasticsearch\"}",
+        "{__name__=~\"scrape_.+\",job=\"metricslog\"}",
     }, time.Now().Add(-time.Hour), time.Now())
     if err != nil {
         fmt.Printf("Error querying Prometheus: %v\n", err)

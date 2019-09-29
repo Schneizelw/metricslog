@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Package elasticsearch is the core instrumentation package. It provides metrics
+// Package metricslog is the core instrumentation package. It provides metrics
 // primitives to instrument code for monitoring. It also offers a registry for
 // metrics. Sub-packages allow to expose the registered metrics via HTTP
 // (package promhttp) or push them to a Pushgateway (package push). There is
@@ -31,17 +31,17 @@
 //      "log"
 //      "net/http"
 //
-//      "github.com/Schneizelw/elasticsearch/client_golang/elasticsearch"
-//      "github.com/Schneizelw/elasticsearch/client_golang/elasticsearch/promhttp"
+//      "github.com/Schneizelw/metricslog/client_golang/metricslog"
+//      "github.com/Schneizelw/metricslog/client_golang/metricslog/promhttp"
 //    )
 //
 //    var (
-//      cpuTemp = elasticsearch.NewGauge(elasticsearch.GaugeOpts{
+//      cpuTemp = metricslog.NewGauge(metricslog.GaugeOpts{
 //          Name: "cpu_temperature_celsius",
 //          Help: "Current temperature of the CPU.",
 //      })
-//      hdFailures = elasticsearch.NewCounterVec(
-//          elasticsearch.CounterOpts{
+//      hdFailures = metricslog.NewCounterVec(
+//          metricslog.CounterOpts{
 //              Name: "hd_errors_total",
 //              Help: "Number of hard-disk errors.",
 //          },
@@ -51,13 +51,13 @@
 //
 //    func init() {
 //      // Metrics have to be registered to be exposed:
-//      elasticsearch.MustRegister(cpuTemp)
-//      elasticsearch.MustRegister(hdFailures)
+//      metricslog.MustRegister(cpuTemp)
+//      metricslog.MustRegister(hdFailures)
 //    }
 //
 //    func main() {
 //      cpuTemp.Set(65.3)
-//      hdFailures.With(elasticsearch.Labels{"device":"/dev/sda"}).Inc()
+//      hdFailures.With(metricslog.Labels{"device":"/dev/sda"}).Inc()
 //
 //      // The Handler function provides a default handler to expose metrics
 //      // via an HTTP server. "/metrics" is the usual endpoint for that.
@@ -82,7 +82,7 @@
 // Above, you have already touched the Counter and the Gauge. There are two more
 // advanced metric types: the Summary and Histogram. A more thorough description
 // of those four metric types can be found in the Prometheus docs:
-// https://elasticsearch.io/docs/concepts/metric_types/
+// https://metricslog.io/docs/concepts/metric_types/
 //
 // A fifth "type" of metric is Untyped. It behaves like a Gauge, but signals the
 // Prometheus server not to assume anything about its type.
@@ -197,4 +197,4 @@
 //
 // More ways of exposing metrics can easily be added by following the approaches
 // of the existing implementations.
-package elasticsearch
+package metricslog

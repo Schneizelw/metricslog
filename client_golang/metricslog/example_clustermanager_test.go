@@ -11,14 +11,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package elasticsearch_test
+package metricslog_test
 
 import (
     "log"
     "net/http"
 
-    "github.com/Schneizelw/elasticsearch/client_golang/elasticsearch"
-    "github.com/Schneizelw/elasticsearch/client_golang/elasticsearch/promhttp"
+    "github.com/Schneizelw/metricslog/client_golang/metricslog"
+    "github.com/Schneizelw/metricslog/client_golang/metricslog/promhttp"
 )
 
 // ClusterManager is an example for a system that might have been built without
@@ -63,12 +63,12 @@ type ClusterManagerCollector struct {
 
 // Descriptors used by the ClusterManagerCollector below.
 var (
-    oomCountDesc = elasticsearch.NewDesc(
+    oomCountDesc = metricslog.NewDesc(
         "clustermanager_oom_crashes_total",
         "Number of OOM crashes.",
         []string{"host"}, nil,
     )
-    ramUsageDesc = elasticsearch.NewDesc(
+    ramUsageDesc = metricslog.NewDesc(
         "clustermanager_ram_usage_bytes",
         "RAM usage as reported to the cluster manager.",
         []string{"host"}, nil,
@@ -78,8 +78,8 @@ var (
 // Describe is implemented with DescribeByCollect. That's possible because the
 // Collect method will always return the same two metrics with the same two
 // descriptors.
-func (cc ClusterManagerCollector) Describe(ch chan<- *elasticsearch.Desc) {
-    elasticsearch.DescribeByCollect(cc, ch)
+func (cc ClusterManagerCollector) Describe(ch chan<- *metricslog.Desc) {
+    metricslog.DescribeByCollect(cc, ch)
 }
 
 // Collect first triggers the ReallyExpensiveAssessmentOfTheSystemState. Then it
@@ -87,20 +87,20 @@ func (cc ClusterManagerCollector) Describe(ch chan<- *elasticsearch.Desc) {
 //
 // Note that Collect could be called concurrently, so we depend on
 // ReallyExpensiveAssessmentOfTheSystemState to be concurrency-safe.
-func (cc ClusterManagerCollector) Collect(ch chan<- elasticsearch.Metric) {
+func (cc ClusterManagerCollector) Collect(ch chan<- metricslog.Metric) {
     oomCountByHost, ramUsageByHost := cc.ClusterManager.ReallyExpensiveAssessmentOfTheSystemState()
     for host, oomCount := range oomCountByHost {
-        ch <- elasticsearch.MustNewConstMetric(
+        ch <- metricslog.MustNewConstMetric(
             oomCountDesc,
-            elasticsearch.CounterValue,
+            metricslog.CounterValue,
             float64(oomCount),
             host,
         )
     }
     for host, ramUsage := range ramUsageByHost {
-        ch <- elasticsearch.MustNewConstMetric(
+        ch <- metricslog.MustNewConstMetric(
             ramUsageDesc,
-            elasticsearch.GaugeValue,
+            metricslog.GaugeValue,
             ramUsage,
             host,
         )
@@ -112,19 +112,19 @@ func (cc ClusterManagerCollector) Collect(ch chan<- elasticsearch.Metric) {
 // ClusterManager. Finally, it registers the ClusterManagerCollector with a
 // wrapping Registerer that adds the zone as a label. In this way, the metrics
 // collected by different ClusterManagerCollectors do not collide.
-func NewClusterManager(zone string, reg elasticsearch.Registerer) *ClusterManager {
+func NewClusterManager(zone string, reg metricslog.Registerer) *ClusterManager {
     c := &ClusterManager{
         Zone: zone,
     }
     cc := ClusterManagerCollector{ClusterManager: c}
-    elasticsearch.WrapRegistererWith(elasticsearch.Labels{"zone": zone}, reg).MustRegister(cc)
+    metricslog.WrapRegistererWith(metricslog.Labels{"zone": zone}, reg).MustRegister(cc)
     return c
 }
 
 func ExampleCollector() {
     // Since we are dealing with custom Collector implementations, it might
     // be a good idea to try it out with a pedantic registry.
-    reg := elasticsearch.NewPedanticRegistry()
+    reg := metricslog.NewPedanticRegistry()
 
     // Construct cluster managers. In real code, we would assign them to
     // variables to then do something with them.
@@ -133,8 +133,8 @@ func ExampleCollector() {
 
     // Add the standard process and Go metrics to the custom registry.
     reg.MustRegister(
-        elasticsearch.NewProcessCollector(elasticsearch.ProcessCollectorOpts{}),
-        elasticsearch.NewGoCollector(),
+        metricslog.NewProcessCollector(metricslog.ProcessCollectorOpts{}),
+        metricslog.NewGoCollector(),
     )
 
     http.Handle("/metrics", promhttp.HandlerFor(reg, promhttp.HandlerOpts{}))

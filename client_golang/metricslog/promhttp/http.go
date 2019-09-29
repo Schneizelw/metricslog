@@ -15,7 +15,7 @@
 //
 // First, the package allows the creation of http.Handler instances to expose
 // Prometheus metrics via HTTP. promhttp.Handler acts on the
-// elasticsearch.DefaultGatherer. With HandlerFor, you can create a handler for a
+// metricslog.DefaultGatherer. With HandlerFor, you can create a handler for a
 // custom registry or anything that implements the Gatherer interface. It also
 // allows the creation of handlers that act differently on errors or allow to
 // log errors.
@@ -40,9 +40,9 @@ import (
     "sync"
     "time"
 
-    "github.com/Schneizelw/elasticsearch/common/expfmt"
+    "github.com/Schneizelw/metricslog/common/expfmt"
 
-    "github.com/Schneizelw/elasticsearch/client_golang/elasticsearch"
+    "github.com/Schneizelw/metricslog/client_golang/metricslog"
 )
 
 const (
@@ -57,12 +57,12 @@ var gzipPool = sync.Pool{
     },
 }
 
-// Handler returns an http.Handler for the elasticsearch.DefaultGatherer, using
+// Handler returns an http.Handler for the metricslog.DefaultGatherer, using
 // default HandlerOpts, i.e. it reports the first error as an HTTP error, it has
 // no error logging, and it applies compression if requested by the client.
 //
 // The returned http.Handler is already instrumented using the
-// InstrumentMetricHandler function and the elasticsearch.DefaultRegisterer. If you
+// InstrumentMetricHandler function and the metricslog.DefaultRegisterer. If you
 // create multiple http.Handlers by separate calls of the Handler function, the
 // metrics used for instrumentation will be shared between them, providing
 // global scrape counts.
@@ -73,7 +73,7 @@ var gzipPool = sync.Pool{
 // HandlerFor function. See there for details.
 func Handler() http.Handler {
     return InstrumentMetricHandler(
-        elasticsearch.DefaultRegisterer, HandlerFor(elasticsearch.DefaultGatherer, HandlerOpts{}),
+        metricslog.DefaultRegisterer, HandlerFor(metricslog.DefaultGatherer, HandlerOpts{}),
     )
 }
 
@@ -83,11 +83,11 @@ func Handler() http.Handler {
 // Gatherers, with non-default HandlerOpts, and/or with custom (or no)
 // instrumentation. Use the InstrumentMetricHandler function to apply the same
 // kind of instrumentation as it is used by the Handler function.
-func HandlerFor(reg elasticsearch.Gatherer, opts HandlerOpts) http.Handler {
+func HandlerFor(reg metricslog.Gatherer, opts HandlerOpts) http.Handler {
     var (
         inFlightSem chan struct{}
-        errCnt      = elasticsearch.NewCounterVec(
-            elasticsearch.CounterOpts{
+        errCnt      = metricslog.NewCounterVec(
+            metricslog.CounterOpts{
                 Name: "promhttp_metric_handler_errors_total",
                 Help: "Total number of internal errors encountered by the promhttp metric handler.",
             },
@@ -103,8 +103,8 @@ func HandlerFor(reg elasticsearch.Gatherer, opts HandlerOpts) http.Handler {
         errCnt.WithLabelValues("gathering")
         errCnt.WithLabelValues("encoding")
         if err := opts.Registry.Register(errCnt); err != nil {
-            if are, ok := err.(elasticsearch.AlreadyRegisteredError); ok {
-                errCnt = are.ExistingCollector.(*elasticsearch.CounterVec)
+            if are, ok := err.(metricslog.AlreadyRegisteredError); ok {
+                errCnt = are.ExistingCollector.(*metricslog.CounterVec)
             } else {
                 panic(err)
             }
@@ -212,9 +212,9 @@ func HandlerFor(reg elasticsearch.Gatherer, opts HandlerOpts) http.Handler {
 // code is known). For tracking scrape durations, use the
 // "scrape_duration_seconds" gauge created by the Prometheus server upon each
 // scrape.
-func InstrumentMetricHandler(reg elasticsearch.Registerer, handler http.Handler) http.Handler {
-    cnt := elasticsearch.NewCounterVec(
-        elasticsearch.CounterOpts{
+func InstrumentMetricHandler(reg metricslog.Registerer, handler http.Handler) http.Handler {
+    cnt := metricslog.NewCounterVec(
+        metricslog.CounterOpts{
             Name: "promhttp_metric_handler_requests_total",
             Help: "Total number of scrapes by HTTP status code.",
         },
@@ -225,20 +225,20 @@ func InstrumentMetricHandler(reg elasticsearch.Registerer, handler http.Handler)
     cnt.WithLabelValues("500")
     cnt.WithLabelValues("503")
     if err := reg.Register(cnt); err != nil {
-        if are, ok := err.(elasticsearch.AlreadyRegisteredError); ok {
-            cnt = are.ExistingCollector.(*elasticsearch.CounterVec)
+        if are, ok := err.(metricslog.AlreadyRegisteredError); ok {
+            cnt = are.ExistingCollector.(*metricslog.CounterVec)
         } else {
             panic(err)
         }
     }
 
-    gge := elasticsearch.NewGauge(elasticsearch.GaugeOpts{
+    gge := metricslog.NewGauge(metricslog.GaugeOpts{
         Name: "promhttp_metric_handler_requests_in_flight",
         Help: "Current number of scrapes being served.",
     })
     if err := reg.Register(gge); err != nil {
-        if are, ok := err.(elasticsearch.AlreadyRegisteredError); ok {
-            gge = are.ExistingCollector.(elasticsearch.Gauge)
+        if are, ok := err.(metricslog.AlreadyRegisteredError); ok {
+            gge = are.ExistingCollector.(metricslog.Gauge)
         } else {
             panic(err)
         }
@@ -299,7 +299,7 @@ type HandlerOpts struct {
     // should only happen with custom collectors. (2) Collection errors with
     // no effect on the HTTP status code because ErrorHandling is set to
     // ContinueOnError.
-    Registry elasticsearch.Registerer
+    Registry metricslog.Registerer
     // If DisableCompression is true, the handler will never compress the
     // response, even if requested by the client.
     DisableCompression bool

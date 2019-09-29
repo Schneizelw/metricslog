@@ -11,14 +11,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package elasticsearch
+package metricslog
 
 import (
     "math"
     "sync/atomic"
     "time"
 
-    dto "github.com/Schneizelw/elasticsearch/client_model/go"
+    dto "github.com/Schneizelw/metricslog/client_model/go"
 )
 
 const (
@@ -239,7 +239,7 @@ func (v *GaugeVec) WithLabelValues(lvs ...string) Gauge {
 
 // With works as GetMetricWith, but panics where GetMetricWithLabels would have
 // returned an error. Not returning an error allows shortcuts like
-//     myVec.With(elasticsearch.Labels{"code": "404", "method": "GET"}).Add(42)
+//     myVec.With(metricslog.Labels{"code": "404", "method": "GET"}).Add(42)
 func (v *GaugeVec) With(labels Labels) Gauge {
     g, err := v.GetMetricWith(labels)
     if err != nil {

@@ -22,9 +22,8 @@ import (
 
     dto "github.com/Schneizelw/metricslog/client_model/go"
 )
-
 const (
-    METRIC_COUNTER = "Counter"
+	METRIC_COUNTER = "_Counter"
 )
 // Counter is a Metric that represents a single numerical value that only ever
 // goes up. That implies that it cannot be used to count items whose number can

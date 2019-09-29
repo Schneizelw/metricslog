@@ -365,16 +365,15 @@ type HistogramVec struct {
 
 // NewHistogramVec creates a new HistogramVec based on the provided HistogramOpts and
 // partitioned by the given label names.
-func NewHistogramVec(opts HistogramOpts, esOpts HistogramEsOpts, labelNames []string) *HistogramVec {
+func NewHistogramVec(opts HistogramOpts, logOpts HistogramLogOpts, labelNames []string) *HistogramVec {
     desc := NewDesc(
         BuildFQName(opts.Namespace, opts.Subsystem, opts.Name),
         opts.Help,
         labelNames,
         opts.ConstLabels,
     )
-    url := BuildEsUrl(esOpts.Host, esOpts.Port, esOpts.EsIndex, esOpts.EsType)
     return &HistogramVec{
-        metricVec: newMetricVec(desc, url, func(lvs ...string) Metric {
+        metricVec: newMetricVec(desc, func(lvs ...string) Metric {
             return newHistogram(desc, opts, lvs...)
         }),
     }

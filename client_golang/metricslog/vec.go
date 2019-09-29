@@ -17,11 +17,6 @@ import (
     "fmt"
     "sync"
     "time"
-    "bytes"
-    "io"
-    "strconv"
-    "net/http"
-    "io/ioutil"
     "encoding/json"
     "github.com/cihub/seelog"
     "github.com/Schneizelw/metricslog/common/model"
@@ -32,6 +27,7 @@ const (
     SUM       = "Sum"
     HELP      = "Help"
     TYPE      = "Type"
+    DATA      = "Data"
     VALUE     = "Value"
     COUNT     = "Count"
     FQNAME    = "FqName"
@@ -237,21 +233,6 @@ type metricMap struct {
     newMetric func(labelValues ...string) Metric
 }
 
-func goRequest(url, data string) error {
-    req, _ := http.NewRequest("PUT", url, bytes.NewReader([]byte(data)))
-    req.Header.Set("Content-Type", "application/json;charset=UTF-8")
-    client := http.Client{}
-    res, err := client.Do(req)
-    if err != nil {
-        return err
-    }
-    if res != nil {
-        io.Copy(ioutil.Discard, res.Body)
-        res.Body.Close()
-    }
-    return nil
-}
-
 func setMetricData(metricType int, dtoMetric dto.Metric, line map[string]interface{}) {
     switch metricType {
     case 1:
@@ -284,11 +265,11 @@ func setMetricData(metricType int, dtoMetric dto.Metric, line map[string]interfa
 func (m *metricMap) printLog(metricType int, metricLog seelog.LoggerInterface) {
     docMap := make(map[string]interface{}, len(m.desc.variableLabels))
     timestamp := time.Now().UTC().Format(time.RFC3339)
+    docMap[FQNAME] = m.desc.fqName
+    docMap[HELP] = m.desc.help
+    docMap[TIMESTAMP] = timestamp
+	metricData := make([]map[string]interface{}, 0)
     for _, lvsSlice := range m.metrics {
-        docMap[FQNAME] = m.desc.fqName
-        docMap[HELP] = m.desc.help
-        docMap[TIMESTAMP] = timestamp
-		docMap[DATA] = []map[string]interface{}{}
         for _, lvs := range lvsSlice {
 			line := map[string]interface{}{}
             for index, label := range m.desc.variableLabels {
@@ -299,15 +280,16 @@ func (m *metricMap) printLog(metricType int, metricLog seelog.LoggerInterface) {
                 continue
             }
             setMetricData(metricType, dtoMetric, line)
-			docMap[DATA] = append(docMap[DATA], line)
+			metricData = append(metricData, line)
         }
     }
+    docMap[DATA] = metricData
     data, err := json.Marshal(docMap)
     if err != nil {
 		metricLog.Warn(err)
         return
     }
-	metricLog.Info(data)
+	metricLog.Info(string(data))
 }
 
 // Describe implements Collector. It will send exactly one Desc to the provided

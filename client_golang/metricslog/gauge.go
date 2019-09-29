@@ -22,9 +22,8 @@ import (
 )
 
 const (
-    METRIC_GAUGE = "Gauge"
+	METRIC_GAUGE = "_Gauge"
 )
-
 // Gauge is a Metric that represents a single numerical value that can
 // arbitrarily go up and down.
 //

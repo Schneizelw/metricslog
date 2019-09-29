@@ -14,6 +14,7 @@
 package metricslog
 
 import (
+	"fmt"
     "strings"
     "time"
 
@@ -92,7 +93,7 @@ type Opts struct {
     ConstLabels Labels
 }
 
-type EsOpts struct {
+type LogOpts struct {
     Interval int
 }
 
@@ -130,15 +131,15 @@ func SetLog(fqName string) seelog.LoggerInterface {
         <seelog levels="info,warn">
             <outputs formatid="runtime">
                 <buffered size="10000" flushperiod="1000">
-                    <rollingfile type="date" filename="./log/runtime_%v.log" datepattern="2006-01-02-15" maxrolls="120"/> 
+                    <rollingfile type="date" filename="./.metricLog/metricLog_%v.log" datepattern="2006-01-02-15" maxrolls="120"/> 
                 </buffered>
             </outputs>
             <formats>
-                <format id="runtime" format="%%Date %%Time [%%LEVEL] [%%Func] [%%RelFile : %%Line] %%Msg%%n"/>
+                <format id="runtime" format="%%Date %%Time [%%LEVEL] %%Msg%%n"/>
             </formats>
         </seelog>
     `
-    logConfigStr = fmt.Sprintf(logConfigStr, faName)
+    logConfigStr = fmt.Sprintf(logConfigStr, fqName)
     logger, err := seelog.LoggerFromConfigAsString(logConfigStr)
     if err != nil {
         panic(err)

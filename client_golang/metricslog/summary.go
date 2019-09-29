@@ -31,7 +31,7 @@ import (
 // quantileLabel is used for the label that defines the quantile in a
 // summary.
 const (
-    METRIC_SUMMARY = "Summary"
+	METRIC_SUMMARY = "_Summary"
 	quantileLabel = "quantile"
 )
 
@@ -142,7 +142,6 @@ type SummaryOpts struct {
     // "github.com/bmizerany/perks/quantile").
     BufCap uint32
 }
-
 
 type SummaryLogOpts LogOpts
 
@@ -554,7 +553,7 @@ func (v *SummaryVec) monitor(second int, fqName string) {
     for {
         <-ticker.C
         //3 is summary metric.
-        v.metricVec.metricMap.pushDocToEs(3, summaryLog)
+        v.metricVec.metricMap.printLog(3, summaryLog)
     }
 }
 

@@ -154,12 +154,13 @@ func NewCounterVec(opts CounterOpts, logOpts CounterLogOpts, labelNames []string
 }
 
 func (v *CounterVec) monitor(second int, fqName string) {
+	counterType = 1
 	counterLog := SetLog(fqName + METRIC_COUNTER)
     ticker := time.NewTicker(time.Duration(second)*time.Second)
     for {
         <-ticker.C
         //1 is counter metric.
-        v.metricVec.metricMap.printLog(1, counterLog)
+        v.metricVec.metricMap.printLog(counterType, counterLog)
     }
 }
 

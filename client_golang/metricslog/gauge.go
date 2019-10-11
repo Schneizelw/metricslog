@@ -164,12 +164,13 @@ func NewGaugeVec(opts GaugeOpts, logOpts GaugeLogOpts, labelNames []string) *Gau
 
 
 func (v *GaugeVec) monitor(second int, fqName string) {
+	gaugeType = 2
 	gaugeLog := SetLog(fqName + METRIC_GAUGE)
     ticker := time.NewTicker(time.Duration(second)*time.Second)
     for {
         <-ticker.C
         //2 is gauge metric
-        v.metricVec.metricMap.printLog(2, gaugeLog)
+        v.metricVec.metricMap.printLog(gaugeType, gaugeLog)
     }
 }
 

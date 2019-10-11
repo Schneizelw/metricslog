@@ -35,7 +35,12 @@ const (
     QUANTILE_50 = "QUANTILE_50"
     QUANTILE_90 = "QUANTILE_90"
     QUANTILE_99 = "QUANTILE_99"
+	COUNTER_TYPE = 1
+	GAUGE_TYPE   = 2
+	SUMMARY_TYPE = 3
 )
+
+var lastValueMap map[uint64]float64
 
 // metricVec is a Collector to bundle metrics of the same name that differ in
 // their label values. metricVec is not used directly (and therefore
@@ -235,13 +240,13 @@ type metricMap struct {
 
 func setMetricData(metricType int, dtoMetric dto.Metric, line map[string]interface{}) {
     switch metricType {
-    case 1:
+    case COUNTER_TYPE:
         dtoCounter := dtoMetric.GetCounter()
         line[VALUE] = dtoCounter.GetValue()
-    case 2:
+    case GAUGE_TYPE:
         dtoGauge := dtoMetric.GetGauge()
         line[VALUE] = dtoGauge.GetValue()
-    case 3:
+    case SUMMARY_TYPE:
         dtoSummary := dtoMetric.GetSummary()
         line[SUM] = dtoSummary.GetSampleSum()
         line[COUNT] = dtoSummary.GetSampleCount()
@@ -269,7 +274,7 @@ func (m *metricMap) printLog(metricType int, metricLog seelog.LoggerInterface) {
     docMap[HELP] = m.desc.help
     docMap[TIMESTAMP] = timestamp
 	metricData := make([]map[string]interface{}, 0)
-    for _, lvsSlice := range m.metrics {
+    for hashValue, lvsSlice := range m.metrics {
         for _, lvs := range lvsSlice {
 			line := map[string]interface{}{}
             for index, label := range m.desc.variableLabels {
@@ -280,6 +285,12 @@ func (m *metricMap) printLog(metricType int, metricLog seelog.LoggerInterface) {
                 continue
             }
             setMetricData(metricType, dtoMetric, line)
+			//reset counter value
+			if metricType == COUNTER_TYPE {
+			    line[VALUE].(float64) = line[VALUE].(float64) - lastValueMap[hashValue]
+			    lastValueMap[hashValue] = line[VALUE].(float64)
+			}
+
 			metricData = append(metricData, line)
         }
     }

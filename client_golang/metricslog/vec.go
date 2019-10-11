@@ -35,12 +35,12 @@ const (
     QUANTILE_50 = "QUANTILE_50"
     QUANTILE_90 = "QUANTILE_90"
     QUANTILE_99 = "QUANTILE_99"
-	COUNTER_TYPE = 1
-	GAUGE_TYPE   = 2
-	SUMMARY_TYPE = 3
+    COUNTER_TYPE = 1
+    GAUGE_TYPE   = 2
+    SUMMARY_TYPE = 3
 )
 
-var lastValueMap map[uint64]float64
+var lastValueMap = make(map[uint64]float64)
 
 // metricVec is a Collector to bundle metrics of the same name that differ in
 // their label values. metricVec is not used directly (and therefore
@@ -273,10 +273,11 @@ func (m *metricMap) printLog(metricType int, metricLog seelog.LoggerInterface) {
     docMap[FQNAME] = m.desc.fqName
     docMap[HELP] = m.desc.help
     docMap[TIMESTAMP] = timestamp
-	metricData := make([]map[string]interface{}, 0)
+    metricData := make([]map[string]interface{}, 0)
+    var curValue float64
     for hashValue, lvsSlice := range m.metrics {
         for _, lvs := range lvsSlice {
-			line := map[string]interface{}{}
+            line := map[string]interface{}{}
             for index, label := range m.desc.variableLabels {
                 line[label] = lvs.values[index]
             }
@@ -285,22 +286,23 @@ func (m *metricMap) printLog(metricType int, metricLog seelog.LoggerInterface) {
                 continue
             }
             setMetricData(metricType, dtoMetric, line)
-			//reset counter value
-			if metricType == COUNTER_TYPE {
-			    line[VALUE].(float64) = line[VALUE].(float64) - lastValueMap[hashValue]
-			    lastValueMap[hashValue] = line[VALUE].(float64)
-			}
+            //reset counter value
+            if metricType == COUNTER_TYPE {
+                curValue = line[VALUE].(float64)
+                line[VALUE] = curValue - lastValueMap[hashValue]
+                lastValueMap[hashValue] = curValue
+            }
 
-			metricData = append(metricData, line)
+            metricData = append(metricData, line)
         }
     }
     docMap[DATA] = metricData
     data, err := json.Marshal(docMap)
     if err != nil {
-		metricLog.Warn(err)
+        metricLog.Warn(err)
         return
     }
-	metricLog.Info(string(data))
+    metricLog.Info(string(data))
 }
 
 // Describe implements Collector. It will send exactly one Desc to the provided

@@ -94,6 +94,7 @@ type Opts struct {
 }
 
 type LogOpts struct {
+    LogPath string
     Interval int
 }
 
@@ -126,12 +127,12 @@ func BuildFQName(namespace, subsystem, name string) string {
     return name
 }
 
-func SetLog(fqName string) seelog.LoggerInterface {
+func SetLog(logPath string, logFileName string) seelog.LoggerInterface {
     logConfigStr := `
         <seelog levels="info,warn">
             <outputs formatid="runtime">
                 <buffered size="10000" flushperiod="1000">
-                    <rollingfile type="date" filename="./.metricLog/metricLog_%v.log" datepattern="2006-01-02-15" maxrolls="120"/> 
+                    <rollingfile type="date" filename="./%v/metricLog_%v.log" datepattern="2006-01-02-15" maxrolls="120"/> 
                 </buffered>
             </outputs>
             <formats>
@@ -139,7 +140,7 @@ func SetLog(fqName string) seelog.LoggerInterface {
             </formats>
         </seelog>
     `
-    logConfigStr = fmt.Sprintf(logConfigStr, fqName)
+    logConfigStr = fmt.Sprintf(logConfigStr, logPath, logFileName)
     logger, err := seelog.LoggerFromConfigAsString(logConfigStr)
     if err != nil {
         panic(err)

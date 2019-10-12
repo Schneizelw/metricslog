@@ -158,14 +158,14 @@ func NewGaugeVec(opts GaugeOpts, logOpts GaugeLogOpts, labelNames []string) *Gau
             return result
         }),
     }
-    go gv.monitor(logOpts.Interval, desc.fqName)
+    go gv.monitor(logOpts.Interval, logOpts.LogPath, desc.fqName)
     return &gv
 }
 
 
-func (v *GaugeVec) monitor(second int, fqName string) {
+func (v *GaugeVec) monitor(second int, logPath string, fqName string) {
 	gaugeType := 2
-	gaugeLog := SetLog(fqName + METRIC_GAUGE)
+	gaugeLog := SetLog(logPath, fqName + METRIC_GAUGE)
     ticker := time.NewTicker(time.Duration(second)*time.Second)
     for {
         <-ticker.C

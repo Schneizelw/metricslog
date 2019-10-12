@@ -543,13 +543,13 @@ func NewSummaryVec(opts SummaryOpts, logOpts SummaryLogOpts, labelNames []string
             return newSummary(desc, opts, lvs...)
         }),
     }
-    go sv.monitor(logOpts.Interval, desc.fqName)
+    go sv.monitor(logOpts.Interval, logOpts.LogPath, desc.fqName)
     return &sv
 }
 
-func (v *SummaryVec) monitor(second int, fqName string) {
+func (v *SummaryVec) monitor(second int, logPath string, fqName string) {
 	summaryType := 3
-	summaryLog := SetLog(fqName + METRIC_SUMMARY)
+	summaryLog := SetLog(logPath, fqName + METRIC_SUMMARY)
     ticker := time.NewTicker(time.Duration(second)*time.Second)
     for {
         <-ticker.C

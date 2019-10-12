@@ -150,13 +150,13 @@ func NewCounterVec(opts CounterOpts, logOpts CounterLogOpts, labelNames []string
             return result
         }),
     }
-    go cv.monitor(logOpts.Interval, desc.fqName)
+    go cv.monitor(logOpts.Interval, logOpts.LogPath, desc.fqName)
     return &cv
 }
 
-func (v *CounterVec) monitor(second int, fqName string) {
+func (v *CounterVec) monitor(second int, logPath string, fqName string) {
 	counterType := 1
-	counterLog := SetLog(fqName + METRIC_COUNTER)
+	counterLog := SetLog(logPath, fqName + METRIC_COUNTER)
     ticker := time.NewTicker(time.Duration(second)*time.Second)
     for {
         <-ticker.C

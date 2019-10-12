@@ -292,16 +292,11 @@ func (m *metricMap) printLog(metricType int, metricLog seelog.LoggerInterface) {
                 line[VALUE] = curValue - lastValueMap[hashValue]
                 lastValueMap[hashValue] = curValue
             }
-
             metricData = append(metricData, line)
         }
     }
     docMap[DATA] = metricData
-    data, err := json.Marshal(docMap)
-    if err != nil {
-        metricLog.Warn(err)
-        return
-    }
+    data, _ := json.Marshal(docMap)
     metricLog.Info(string(data))
 }
 

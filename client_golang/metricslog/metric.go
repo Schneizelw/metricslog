@@ -14,7 +14,7 @@
 package metricslog
 
 import (
-	"fmt"
+    "fmt"
     "strings"
     "time"
 

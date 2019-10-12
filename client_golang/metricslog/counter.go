@@ -24,7 +24,7 @@ import (
 )
 
 const (
-	METRIC_COUNTER = "_Counter"
+    METRIC_COUNTER = "_Counter"
 )
 // Counter is a Metric that represents a single numerical value that only ever
 // goes up. That implies that it cannot be used to count items whose number can
@@ -155,8 +155,8 @@ func NewCounterVec(opts CounterOpts, logOpts CounterLogOpts, labelNames []string
 }
 
 func (v *CounterVec) monitor(second int, logPath string, fqName string) {
-	counterType := 1
-	counterLog := SetLog(logPath, fqName + METRIC_COUNTER)
+    counterType := 1
+    counterLog := SetLog(logPath, fqName + METRIC_COUNTER)
     ticker := time.NewTicker(time.Duration(second)*time.Second)
     for {
         <-ticker.C

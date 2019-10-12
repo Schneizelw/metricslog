@@ -31,8 +31,8 @@ import (
 // quantileLabel is used for the label that defines the quantile in a
 // summary.
 const (
-	METRIC_SUMMARY = "_Summary"
-	quantileLabel = "quantile"
+    METRIC_SUMMARY = "_Summary"
+    quantileLabel = "quantile"
 )
 
 // A Summary captures individual observations from an event or sample stream and
@@ -548,8 +548,8 @@ func NewSummaryVec(opts SummaryOpts, logOpts SummaryLogOpts, labelNames []string
 }
 
 func (v *SummaryVec) monitor(second int, logPath string, fqName string) {
-	summaryType := 3
-	summaryLog := SetLog(logPath, fqName + METRIC_SUMMARY)
+    summaryType := 3
+    summaryLog := SetLog(logPath, fqName + METRIC_SUMMARY)
     ticker := time.NewTicker(time.Duration(second)*time.Second)
     for {
         <-ticker.C

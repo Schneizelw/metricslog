@@ -22,7 +22,7 @@ import (
 )
 
 const (
-	METRIC_GAUGE = "_Gauge"
+    METRIC_GAUGE = "_Gauge"
 )
 // Gauge is a Metric that represents a single numerical value that can
 // arbitrarily go up and down.
@@ -164,8 +164,8 @@ func NewGaugeVec(opts GaugeOpts, logOpts GaugeLogOpts, labelNames []string) *Gau
 
 
 func (v *GaugeVec) monitor(second int, logPath string, fqName string) {
-	gaugeType := 2
-	gaugeLog := SetLog(logPath, fqName + METRIC_GAUGE)
+    gaugeType := 2
+    gaugeLog := SetLog(logPath, fqName + METRIC_GAUGE)
     ticker := time.NewTicker(time.Duration(second)*time.Second)
     for {
         <-ticker.C

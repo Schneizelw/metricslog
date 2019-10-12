@@ -22,6 +22,7 @@ import (
 
     dto "github.com/Schneizelw/metricslog/client_model/go"
 )
+
 const (
 	METRIC_COUNTER = "_Counter"
 )
